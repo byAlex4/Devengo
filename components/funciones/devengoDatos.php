@@ -1,0 +1,39 @@
+<?php
+header("Content-Type: application/json");
+try {
+    // Conectamos con la base de datos
+    include '../../config.php';
+
+    // Preparamos la consulta SQL para obtener los datos de los usuarios, sus unidades y sus roles
+    $stmt = $conexion->prepare(
+        'SELECT devengos.id, devengos.fecha, devengos.descripcion, devengos.monto, 
+        devengos.created_at, devengos.updated_at, 
+        contratos.clave AS contrato, 
+        contratos.mont_max AS saldo,
+        (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldoDis, 
+        usuarios.nombre AS usuario, 
+        unidades.nombre AS unidad 
+        FROM devengos 
+        JOIN contratos ON devengos.contratoID = contratos.id 
+        JOIN usuarios ON devengos.usuarioID = usuarios.id 
+        JOIN unidades ON usuarios.unidadID = unidades.id');
+
+
+    // Ejecutamos la consulta SQL sin parámetros
+    $stmt->execute();
+    // Obtenemos el resultado como un array de arrays asociativos
+    $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Comprobamos si hay resultados
+    if (count($resultados) > 0) {
+        // Devolvemos el resultado en formato JSON
+        echo json_encode($resultados);
+    } else {
+        // Mostramos un mensaje indicando que no hay resultados
+        echo json_encode(array("message" => "No se encontraron usuarios"));
+    }
+} catch (PDOException $e) {
+    // Mostramos un mensaje de error genérico
+    echo json_encode(array("error" => "Ocurrió un error al obtener los datos"));
+}
+?>
