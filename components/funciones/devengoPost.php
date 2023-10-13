@@ -35,10 +35,9 @@ if (isset($_POST['shw'])) {
         try {
             // Obtener el valor de 'id' del cuerpo de la solicitud POST
             $clave = $_POST['contr'];
-            $consulta = "SELECT *, 
-            (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldo, 
-(SELECT month(fecha) FROM devengos WHERE contratoID = contratos.id) AS meses FROM contratos
-            WHERE contratos.clave = '$clave'";
+            $consulta = "SELECT *, SELECT id, fecha, monto, TIMESTAMPDIFF(MONTH, fecha, NOW()) AS meses_transcurridos, (monto*TIMESTAMPDIFF(MONTH, fecha, NOW())) AS total_gastos
+            FROM devengos
+            GROUP BY id";
 
             $sentecia = $conexion->prepare($consulta);
             $sentecia->execute();
