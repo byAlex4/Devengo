@@ -1794,6 +1794,7 @@ progress {
     flex: 0 0 auto;
     width: 24%;
   }
+
   .col-xl-4 {
     flex: 0 0 auto;
     width: 33.33333333%;
@@ -2421,23 +2422,25 @@ progress {
   font-size: 0.875rem;
 }
 
-.container2 {
-  margin-left: 17%;
-  width: 60%;
-  border-color: #5a23c8;
-  border: 15px;
+@media screen and (min-width: 801px){
+  .container2 {
+    margin-left: 20%;
+    max-width: 60%;
+    border-color: #5a23c8;
+    border: 15px;
+  }
+
+  .doc {
+    margin-top: 20%;
+    padding-bottom: 15%;
+    width: 80%
+  }
 }
 
-.doc {
-  margin-top: 20%;
-  padding-bottom: 15%;
-  width: 80%
-}
-
-@media (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .container2 {
     margin-left: 10%;
-    width: 92%;
+    width: 80%;
     border-color: #5a23c8;
     border: 15px;
     align-items: center;

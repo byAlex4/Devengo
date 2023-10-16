@@ -35,29 +35,15 @@ if (isset($_POST['shw'])) {
         try {
             // Obtener el valor de 'id' del cuerpo de la solicitud POST
             $clave = $_POST['contr'];
-            $consulta = "SELECT *, 
-            (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldo, 
-(SELECT month(fecha) FROM devengos WHERE contratoID = contratos.id) AS meses FROM contratos
-            WHERE contratos.clave = '$clave'";
+            $consulta = "SELECT * FROM contratos
+            WHERE clave = '$clave'";
 
             $sentecia = $conexion->prepare($consulta);
             $sentecia->execute();
 
             $show = $sentecia->fetch(PDO::FETCH_ASSOC);
-            //Crear una respuesta
-            $respuesta = array(
-                'id' => $show['id'],
-                'clave' => $show['clave'],
-                'desc' => $show['descripcion'],
-                'max' => $show['mont_max'],
-                'saldo' => $show['saldo'],
-                'min' => $show['mont_min'],
-                'ini' => $show['fecha_in'],
-                'fin' => $show['fecha_fin'],
-                'meses' => $show['meses']
-            );
 
-            $json = $respuesta;
+            $json = $show;
             // Devolver la respuesta como JSON
         } catch (Exception $error) {
             $json = $error;

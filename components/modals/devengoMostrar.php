@@ -2,30 +2,31 @@
 $error = false;
 $config = include '../config.php';
 
+$meses = array(
+    "",
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    'Agosto',
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre"
+);
+
 try {
-    $consultaSQL = "SELECT SUM(monto), month(fecha) 
+    $consultaSQL = "SELECT SUM(monto) AS total, month(fecha) AS mes 
     FROM `devengos` 
+    WHERE devengos.contratoID = 1
     GROUP BY month(fecha) 
     ORDER BY month(fecha) ASC";
 
     $sentencia = $conexion->prepare($consultaSQL);
     $sentencia->execute();
-
-    $meses = array(
-        "",
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        'Agosto',
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre"
-    );
 } catch (PDOException $error) {
     $error = $error->getMessage();
 }
@@ -38,42 +39,56 @@ try {
     </div>
     <div class="modal-body">
         <div class="card-body mx-4">
-            <div class="container">
-                <div class="row">
+            <div class="container" style="place-content: center;">
+                <div class="row ms-5">
                     <h3>Contrato: <span id="claveMostrar"></span></h3>
-                    <div class="col-4">
+                </div>
+                <div class="row ms-5">
+                    <div class="col-5">
                         <ul class="list-unstyled">
                             <li class="h4 text-black mt-1">Fecha de inicio:</li>
                             <li class="h4 text-black mt-1">Fecha de fin:</li>
                             <li class="h4 text-black mt-1">Monto:</li>
                         </ul>
                     </div>
-                    <div class="col-4">
+                    <div class="col-5">
                         <ul class="list-unstyled">
                             <li class="h4 text-black mt-1"><span class="text-muted" id="iniMostrar"></span></li>
                             <li class="h4 text-black mt-1"><span class="text-muted" id="finMostrar"></span></li>
                             <li class="h4 text-black mt-1"><span class="text-muted" id="maxMostrar"></span></li>
                         </ul>
                     </div>
+                </div>
+                <div class="row m-3">
                     <?php
-                    while ($fila = $sentencia->fetch(PDO::FETCH_ASSOC)) {
-                        $monto = $fila['SUM(monto)'];
-                        $mes = $fila['month(fecha)'];
-                        $nombre_mes = $meses[$mes];
-                        echo "<hr><div class='col-10'><p>$nombre_mes</p></div><div class='col-2'><p class='float-end'>$monto</p></div>";
+                    // Crear un array para almacenar los montos por mes
+                    $montosPorMes = array_fill(1, 12, 0);
+
+                    // Llenar el array con los resultados de la consulta
+                    foreach ($sentencia as $fila) {
+                        $montosPorMes[$fila['mes']] = $fila['total'];
+                    }
+
+                    // Recorrer el array $meses
+                    foreach ($meses as $numero => $nombre) {
+                        if ($nombre != "") {
+                            // Mostrar el nombre del mes y el monto correspondiente
+                            echo "<div class='col-9'><p>$nombre</p></div><div class='col-3'><p class='float-end'>$" . $montosPorMes[$numero] . " </p></div> <hr>";
+                        }
                     }
                     ?>
-                    <div class="row text-black">
-                        <hr style="border: 2px solid black;">
-                        <div class="col-xl-12">
-                            <p class="float-end fw-bold">Total: $10.00
-                            </p>
-                        </div>
-                        <hr style="border: 2px solid black;">
-                    </div>
-
                 </div>
+                <div class="row text-black">
+                    <hr style="border: 2px solid black;">
+                    <div class="col-xl-12">
+                        <p class="float-end fw-bold">Total: $10.00
+                        </p>
+                    </div>
+                    <hr style="border: 2px solid black;">
+                </div>
+
             </div>
         </div>
     </div>
+</div>
 </div>

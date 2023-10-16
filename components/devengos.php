@@ -184,11 +184,11 @@ error_reporting(E_ALL);
                 $('#formMostrar').val(data.clave);
                 $('#claveMostrar').text(data.clave);
                 $('#descMostrar').text(data.desc);
-                $('#maxMostrar').text(data.max);
+                $('#maxMostrar').text(data.mont_max);
                 $('#saldoMostrar').text(data.saldo);
                 $('#minMostrar').text(data.min);
-                $('#iniMostrar').text(data.ini);
-                $('#finMostrar').text(data.fin);
+                $('#iniMostrar').text(data.fecha_in);
+                $('#finMostrar').text(data.fecha_fin);
             }
         })
     });
