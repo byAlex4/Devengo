@@ -3,6 +3,8 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 ?>
+
+
 <main class="bodymain">
     <div class="mt-3">
         <h1>Página de usuarios</h1>
@@ -13,8 +15,20 @@ error_reporting(E_ALL);
                 Crear usuario
             </button>
         </div>
-
         <div style="overflow-x: auto;">
+            <form action="post">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Matricula</span>
+                    <input type="text" class="form-control" id="buscarMatri" style="min-width: 100px;">
+                    <span class="input-group-text">Nombre</span>
+                    <input type="text" class="form-control" id="buscarNombre" style="min-width: 100px;">
+                    <span class="input-group-text">Unidad</span>
+                    <input type="text" class="form-control" id="buscarUnidad" style="min-width: 100px;">
+                    <span class="input-group-text">Rol</span>
+                    <input type="text" class="form-control" id="buscarRol" style="min-width: 100px;">
+                    <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
+                </div>
+            </form>
             <table class="table table-hover" id="tablaUsuarios"
                 style="background-color: #e4f7e8; margin-top: 15%; opacity: 0.2">
                 <thead class="thead-primary" style="background-color: #a1d6aa; width: 100%;">
@@ -87,6 +101,48 @@ error_reporting(E_ALL);
     // Función para cargar los datos al iniciar la página
     $(document).ready(function () {
         cargarDatos();
+    });
+
+    //Funcion de crear usuario
+    $(document).on('click', '.buscar', function (e) {
+        var matricula = $('#buscarMatri').val();
+        var nombre = $('#buscarNombre').val();
+        var unidad = $('#buscarUnidad').val();
+        var rol = $('#buscarRol').val();
+        console.log(matricula, nombre, unidad, rol);
+        $.ajax({
+            url: 'funciones/userPost.php',
+            type: 'POST',
+            data: {
+                'bscNombre': nombre,
+                'bscUnidad': unidad,
+                'bscMatricula': matricula,
+                'bscRol': rol
+            },
+            dataType: 'JSON',
+            success: function (data) {
+                console.log(data);
+                // Vaciamos el cuerpo de la tabla 
+                $("tbody").empty();
+                $.each(data, function (i, item) {
+                    // Creamos una fila con los datos de cada usuario
+                    var fila = "<tr>" +
+                        "<td>" + item.id + "</td>" +
+                        "<td>" + item.matricula + "</td>" +
+                        "<td>" + item.nombre + "</td>" +
+                        "<td>" + item.unidad + "</td>" +
+                        "<td>" + item.rol + "</td>" +
+                        "<td>" + item.created_at + "</td>" +
+                        "<td>" + item.updated_at + "</td>" +
+                        "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                        "</tr>";
+                    $("tbody").append(fila);
+                });
+                var table = $('#tablaUsuarios');
+                table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
+                table.animate({ opacity: '1', marginTop: '0' }, "slow");
+            }
+        })
     });
 
     //Funcion de crear usuario
@@ -165,6 +221,7 @@ error_reporting(E_ALL);
         var matricula = $('#matriculaEdit').val();
         var contraseña = $('#contraseñaEdit').val();
         var rol = $('#rolEdit').val();
+        console.log(id, nombre, unidad, matricula, contraseña, rol);
         $.ajax({
             url: 'funciones/userPost.php',
             type: 'POST',
@@ -176,7 +233,7 @@ error_reporting(E_ALL);
                 'contra': contraseña,
                 'rol': rol
             },
-            dataType: 'JSON',
+            //dataType: 'JSON',
             success: function (data) {
                 Swal.fire({
                     title: '¡Hecho!',

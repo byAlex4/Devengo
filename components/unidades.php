@@ -7,13 +7,22 @@ error_reporting(E_ALL);
     <div class="mt-3">
         <h1>Página de unidades</h1>
         <div style="overflow-x: auto;">
+            <form action="post">
+                <div class="input-group mb-4 ms-5" ">
+                    <span class=" input-group-text">Clave</span>
+                    <input type="text" class="form-control" id="buscarClave" style="max-width: 200px;">
+                    <span class="input-group-text">Nombre</span>
+                    <input type="text" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
+                </div>
+            </form>
             <table class="table table-hover" id="tablaUnidades"
                 style="background-color: #e4f7e8; margin-top: 15%; opacity: 0.2">
                 <thead class="thead-primary" style="background-color: #a1d6aa; width: 100%;">
                     <tr>
                         <th>ID</th>
+                        <th>Clave</th>
                         <th>Nombre</th>
-                        <th>Descripcipón</th>
                         <th>Created</th>
                         <th>Updated</th>
                         <th>Acciones</th>
@@ -70,6 +79,40 @@ error_reporting(E_ALL);
     // Función para cargar los datos al iniciar la página
     $(document).ready(function () {
         cargarDatos();
+    });
+
+    $(document).on('click', '.buscar', function (e) {
+        var clave = $('#buscarClave').val();
+        var nombre = $('#buscarNombre').val();
+        console.log(clave, nombre);
+        $.ajax({
+            url: 'funciones/unidadPost.php',
+            type: 'POST',
+            data: {
+                'bscNombre': nombre,
+                'bscClave': clave,
+            },
+            dataType: 'JSON',
+            success: function (data) {
+                console.log(data);
+                var table = $('#tablaUnidades');
+                $("tbody").empty();
+                table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");          
+                $.each(data, function (i, item) {
+                    // Creamos una fila con los datos de cada conjtrato
+                    var fila = "<tr>" +
+                        "<td>" + item.id + "</td>" +
+                        "<td>" + item.nombre + "</td>" +
+                        "<td>" + item.descripcion + "</td>" +
+                        "<td>" + item.created_at + "</td>" +
+                        "<td>" + item.updated_at + "</td>" +
+                        "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                        "</tr>";
+                    $("tbody").append(fila);
+                });
+                table.animate({ opacity: '1', marginTop: '0' }, "slow");
+            }
+        })
     });
 
     //Funcion para mostrar datos del contrato seleccionado para editar

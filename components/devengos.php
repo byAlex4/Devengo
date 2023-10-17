@@ -14,6 +14,21 @@ error_reporting(E_ALL);
             </button>
         </div>
         <div style="overflow-x: auto;">
+            <form action="post">
+                <div class="input-group mb-4">
+                    <span class=" input-group-text">Descripcion</span>
+                    <input type="text" class="form-control" id="buscarClave" style="max-width: 200px;">
+                    <span class="input-group-text">Montos</span>
+                    <input type="text" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <span class="input-group-text">Contratos</span>
+                    <input type="text" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <span class="input-group-text">Unidades</span>
+                    <input type="text" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <span class="input-group-text">Fecha</span>
+                    <input type="date" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
+                </div>
+            </form>
             <table class="table table-hover" id="tablaDevengos"
                 style="background-color: #e4f7e8; margin-top: 15%; opacity: 0.2">
                 <thead class="thead-primary" style="background-color: #a1d6aa; width: 100%;">

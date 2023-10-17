@@ -14,6 +14,19 @@ error_reporting(E_ALL);
             </button>
         </div>
         <div style="overflow-x: auto;">
+            <form action="post">
+                <div class="input-group mb-4">
+                    <span class=" input-group-text">Clave</span>
+                    <input type="text" class="form-control" id="bscClave" style="max-width: 200px;">
+                    <span class="input-group-text">Descripcion</span>
+                    <input type="text" class="form-control" id="bscDesc" style="max-width: 200px;">
+                    <span class="input-group-text">Monto</span>
+                    <input type="text" class="form-control" id="bscMonto" style="max-width: 200px;">
+                    <span class="input-group-text">Fecha</span>
+                    <input type="date" class="form-control" id="bscFecha" style="max-width: 200px;">
+                    <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
+                </div>
+            </form>
             <table class="table table-hover" id="tablaContratos"
                 style="background-color: #e4f7e8; margin-top: 15%; opacity: 0.2;">
                 <thead class="thead-primary" style="background-color: #a1d6aa; width: 100%;">
@@ -94,6 +107,47 @@ error_reporting(E_ALL);
         cargarDatos();
     });
 
+    $(document).on('click', '.buscar', function (e) {
+        var clave = $('#bscClave').val();
+        var descripcion = $('#bscDesc').val();
+        var monto = $('#bscMonto').val();
+        var fecha = $('#bscFecha').val();
+        console.log(clave, descripcion, monto, fecha);
+        $.ajax({
+            url: 'funciones/contratoPost.php',
+            type: 'POST',
+            data: {
+                'bscClave': clave,
+                'bscDesc': descripcion,
+                'bscMonto': monto,
+                'bscFecha': fecha
+            },
+            dataType: 'JSON',
+            success: function (data) {
+                console.log(data);
+                var table = $('#tablaContratos');
+                $("tbody").empty();
+                table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
+                $.each(data, function (i, item) {
+                    // Creamos una fila con los datos de cada conjtrato
+                    var fila = "<tr>" +
+                        "<td>" + item.id + "</td>" +
+                        "<td>" + item.clave + "</td>" +
+                        "<td>" + item.descripcion + "</td>" +
+                        "<td>" + item.mont_max + "</td>" +
+                        "<td>" + item.mont_min + "</td>" +
+                        "<td>" + item.fecha_in + "</td>" +
+                        "<td>" + item.fecha_fin + "</td>" +
+                        "<td>" + item.created_at + "</td>" +
+                        "<td>" + item.updated_at + "</td>" +
+                        "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                        "</tr>";
+                    $("tbody").append(fila);
+                });
+                table.animate({ opacity: '1', marginTop: '0' }, "slow");
+            }
+        })
+    });
     //Funcion de crear contratos
     $(document).on('click', '.crear', function (e) {
         e.preventDefault();
