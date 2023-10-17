@@ -118,6 +118,11 @@ error_reporting(E_ALL);
                 var table = $('#tablaUsuarios');
                 table.animate({ opacity: '0', marginTop: '15%' }, "slow");
                 cargarDatos();
+                $('#nombreCrear').val("");
+                $('#unidadCrear').val(0);
+                $('#matriculaCrear').val("");
+                $('#contraseñaCrear').val("");
+                $('#rolCrear').val(0);
             },
             error: function (data) {
                 console.log(data);

@@ -15,7 +15,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <select class="form-select" id="unidadCrear" aria-label="Floating label select example">
-                            <option selected>Selecciona una unidad</option>
+                            <option value="0" selected>Selecciona una unidad</option>
                             <?php
                             $consultaUnidades = "SELECT id, nombre FROM unidades";
                             $sentenciaUnidades = $conexion->prepare($consultaUnidades);
@@ -41,7 +41,7 @@
                     <div class="form-floating mb-3">
                         <select class="form-select" name="rolCrear" id="rolCrear"
                             aria-label="Floating label select example">
-                            <option selected>Selecciona un rol</option>
+                            <option value="0" selected>Selecciona un rol</option>
                             <?php
                             $consultaRoles = "SELECT id, nombre FROM roles";
                             $sentenciaRoles = $conexion->prepare($consultaRoles);

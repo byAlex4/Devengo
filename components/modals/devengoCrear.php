@@ -15,7 +15,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <select class="form-select" id="contratoCrear" aria-label="Floating label select example">
-                            <option selected>Selecciona el contrato</option>
+                            <option value="0" selected>Selecciona el contrato</option>
                             <?php
                             $consultaContrato = "SELECT id, clave FROM contratos WHERE fecha_fin > CURDATE();";
                             $sentenciaContrato = $conexion->prepare($consultaContrato);
@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <select class="form-select" id="usuarioCrear" aria-label="Floating label select example">
-                            <option selected>Selecciona al usuario</option>
+                            <option value="0" selected>Selecciona al usuario</option>
                             <?php
                             $consultaUsuario = "SELECT id, nombre FROM usuarios";
                             $sentenciaUsuario = $conexion->prepare($consultaUsuario);

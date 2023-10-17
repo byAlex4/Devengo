@@ -126,6 +126,12 @@ error_reporting(E_ALL);
                 var table = $('#tablaContratos');
                 table.animate({ opacity: '0', marginTop: '15%' }, "slow");
                 cargarDatos();
+                $('#claveCrear').val("");
+                $('#desCrear').val("");
+                $('#maxCrear').val("");
+                $('#minCrear').val("");
+                $('#iniCrear').val("");
+                $('#finCrear').val("");
             },
             error: function (data) {
                 console.log(data);

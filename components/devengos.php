@@ -55,8 +55,6 @@ error_reporting(E_ALL);
             <?php include "modals/devengoMostrar.php"; ?>
         </div>
     </div>
-    <button type='button' class='btn btn-link' data-bs-toggle='tooltip' data-bs-placement='top'
-        data-bs-title='Tooltip on top'>tool</button>
 </main>
 
 
@@ -99,16 +97,11 @@ error_reporting(E_ALL);
     // Función para cargar los datos al iniciar la página
     $(document).ready(function () {
         cargarDatos();
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
     });
 
     //Funcion de crear usuario
     $(document).on('click', '.crear', function (e) {
         e.preventDefault();
-        $("DatosDevengo").empty();
         var fecha = $('#fechaCrear').val();
         var descripcion = $('#descCrear').val();
         var monto = $('#montoCrear').val();
@@ -136,6 +129,11 @@ error_reporting(E_ALL);
                 var table = $('#tablaDevengos');
                 table.animate({ opacity: '0', marginTop: '15%' }, "slow");
                 cargarDatos();
+                $('#fechaCrear').val("");
+                $('#descCrear').val("");
+                $('#montoCrear').val("");
+                $('#usuarioCrear').val(0);
+                $('#contratoCrear').val(0);
             },
             error: function (data) {
                 console.log(data);
