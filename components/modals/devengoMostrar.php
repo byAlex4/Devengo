@@ -19,19 +19,15 @@ $meses = array(
 );
 
 try {
-    $consultaSQL = "SET @csum := 0; SELECT
-        DATE_FORMAT(m.fecha, '%Y-%m') AS mes,
-        COALESCE(t.total_mes, 500) AS total_mes,
-        (@csum := @csum + COALESCE(t.total_mes,500)) AS total_acumulado
-        FROM (SELECT DATE_ADD('2023-04-16', INTERVAL n MONTH) AS fecha 
-        FROM (SELECT 0 AS n 
-        UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 
-        UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 
-        UNION ALL SELECT 11) AS numbers WHERE DATE_ADD('2023-04-16', INTERVAL n MONTH) <= CURDATE()) AS m
-        LEFT JOIN 
-        (SELECT SUM(monto) AS total_mes, DATE_FORMAT(fecha, '%Y-%m') AS mes FROM devengos WHERE devengos.contratoID = 1 GROUP BY DATE_FORMAT(fecha, '%Y-%m')) AS t ON DATE_FORMAT(m.fecha, '%Y-%m') = t.mes
-        ORDER BY 
-        m.fecha ASC;";
+    $consultaSQL = "SELECT DATE_FORMAT(m.fecha, '%Y-%m') AS mes, 
+    COALESCE(t.total_mes, 500) AS total_mes, 
+    SUM(COALESCE(t.total_mes, 500)) OVER (ORDER BY m.fecha) AS total_acumulado 
+    FROM ( SELECT LAST_DAY(CURDATE()) - INTERVAL (11 - n) MONTH AS fecha 
+    FROM ( SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 
+    4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 
+    9 UNION ALL SELECT 10 UNION ALL SELECT 11 ) AS numbers ) AS m 
+    LEFT JOIN ( SELECT SUM(monto) AS total_mes, DATE_FORMAT(fecha, '%Y-%m') AS mes 
+    FROM devengos WHERE devengos.contratoID = 1 GROUP BY mes ) AS t ON DATE_FORMAT(m.fecha, '%Y-%m') = t.mes;";
 
     $sentencia = $conexion->prepare($consultaSQL);
     $sentencia->execute();

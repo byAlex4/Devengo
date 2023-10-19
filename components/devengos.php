@@ -133,7 +133,7 @@ error_reporting(E_ALL);
                 $("tbody").empty();
                 table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
                 $.each(data, function (i, item) {
-                    // Creamos una fila con los datos de cada usuario
+                    //Creamos una fila con los datos de cada usuario
                     var fila = "<tr>" +
                         "<td>" + item.id + "</td>" +
                         "<td>" + item.fecha + "</td>" +
