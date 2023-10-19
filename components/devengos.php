@@ -17,19 +17,19 @@ error_reporting(E_ALL);
             <form action="post">
                 <div class="input-group mb-4">
                     <span class=" input-group-text">Descripcion</span>
-                    <input type="text" class="form-control" id="buscarClave" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscDesc" style="max-width: 200px;">
                     <span class="input-group-text">Montos</span>
-                    <input type="text" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscMonto" style="max-width: 200px;">
                     <span class="input-group-text">Contratos</span>
-                    <input type="text" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscContrato" style="max-width: 200px;">
                     <span class="input-group-text">Unidades</span>
-                    <input type="text" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscUnidad" style="max-width: 200px;">
                     <span class="input-group-text">Fecha</span>
-                    <input type="date" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <input type="month" class="form-control" id="bscFecha" style="max-width: 200px;">
                     <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
                 </div>
             </form>
-            <table class="table table-hover" id="tablaDevengos"
+            <table class="table table-hover" id="DatosDevengo"
                 style="background-color: #e4f7e8; margin-top: 15%; opacity: 0.2">
                 <thead class="thead-primary" style="background-color: #a1d6aa; width: 100%;">
                     <tr>
@@ -84,7 +84,7 @@ error_reporting(E_ALL);
         $.ajax({
             url: 'funciones/devengoDatos.php',
             type: "GET",
-            //dataType: "JSON",
+            dataType: "JSON",
             success: function (data) {
                 $.each(data, function (i, item) {
                     // Creamos una fila con los datos de cada usuario
@@ -103,11 +103,56 @@ error_reporting(E_ALL);
                         "</tr>";
                     $(".DatosDevengo").append(fila);
                 });
-                var table = $('#tablaDevengos');
+                var table = $('#DatosDevengo');
                 table.animate({ opacity: '1', marginTop: '0' }, "slow");
             }
         });
     }
+
+    $(document).on('click', '.buscar', function (e) {
+        var descripcion = $('#bscDesc').val();
+        var monto = $('#bscMonto').val();
+        var contrato = $('#bscContrato').val();
+        var unidad = $('#bscUnidad').val();
+        var fecha = $('#bscFecha').val();
+        console.log(descripcion, monto, contrato, unidad, fecha);
+        $.ajax({
+            url: 'funciones/devengoPost.php',
+            type: 'POST',
+            data: {
+                'bscDesc': descripcion,
+                'bscMonto': monto,
+                'bscContrato': contrato,
+                'bscUnidad': unidad,
+                'bscFecha': fecha
+            },
+            dataType: 'JSON',
+            success: function (data) {
+                console.log(data);
+                var table = $('#DatosDevengo');
+                $("tbody").empty();
+                table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
+                $.each(data, function (i, item) {
+                    // Creamos una fila con los datos de cada usuario
+                    var fila = "<tr>" +
+                        "<td>" + item.id + "</td>" +
+                        "<td>" + item.fecha + "</td>" +
+                        "<td>" + item.descripcion + "</td>" +
+                        "<td>" + item.monto + "</td>" +
+                        "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contrato + "'>" + item.contrato + "</button> </td>" +
+                        "<td>" + item.saldo + "</td>" +
+                        "<td>" + item.saldoDis + "</td>" +
+                        "<td>" + item.unidad + "</td>" +
+                        "<td>" + item.created_at + "</td>" +
+                        "<td>" + item.updated_at + "</td>" +
+                        "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                        "</tr>";
+                    $(".DatosDevengo").append(fila);
+                });
+                table.animate({ opacity: '1', marginTop: '0' }, "slow");
+            }
+        })
+    });
 
     // Función para cargar los datos al iniciar la página
     $(document).ready(function () {

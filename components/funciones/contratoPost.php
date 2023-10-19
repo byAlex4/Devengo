@@ -19,7 +19,7 @@ if (
         $consultaSQL .= "WHERE mont_max >=" . $_POST['bscMonto'];
     }
     if (!empty($_POST['bscFecha'])) {
-        $consultaSQL .= "WHERE fecha_in LIKE '%" . $_POST['bscFecha'] . "%'";
+        $consultaSQL .= "WHERE DATE_FORMAT(fecha_in, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
     }
 
     $sentecia = $conexion->prepare($consultaSQL);

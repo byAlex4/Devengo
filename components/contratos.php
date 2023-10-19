@@ -22,8 +22,8 @@ error_reporting(E_ALL);
                     <input type="text" class="form-control" id="bscDesc" style="max-width: 200px;">
                     <span class="input-group-text">Monto</span>
                     <input type="text" class="form-control" id="bscMonto" style="max-width: 200px;">
-                    <span class="input-group-text">Fecha</span>
-                    <input type="date" class="form-control" id="bscFecha" style="max-width: 200px;">
+                    <span class="input-group-text">Mes</span>
+                    <input type="month" class="form-control" id="bscFecha" style="max-width: 200px;">
                     <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
                 </div>
             </form>

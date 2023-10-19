@@ -97,7 +97,7 @@ error_reporting(E_ALL);
                 console.log(data);
                 var table = $('#tablaUnidades');
                 $("tbody").empty();
-                table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");          
+                table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
                 $.each(data, function (i, item) {
                     // Creamos una fila con los datos de cada conjtrato
                     var fila = "<tr>" +
