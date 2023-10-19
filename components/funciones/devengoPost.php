@@ -78,14 +78,16 @@ if (
             $json = $error;
         }
 
-        echo json_encode($json);
-    } else {
-        if (isset($_POST['contr'])) {
-            try {
-                // Obtener el valor de 'id' del cuerpo de la solicitud POST
-                $clave = $_POST['contr'];
-                $consulta = "SELECT * FROM contratos
-            WHERE clave = '$clave'";
+    echo json_encode($json);
+} else {
+    if (isset($_POST['contr'])) {
+        try {
+            // Obtener el valor de 'id' del cuerpo de la solicitud POST
+            $clave = $_POST['contr'];
+            $consulta = "SELECT *, 
+            (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldo, 
+(SELECT month(fecha) FROM devengos WHERE contratoID = contratos.id) AS meses FROM contratos
+            WHERE contratos.clave = '$clave'";
 
                 $sentecia = $conexion->prepare($consulta);
                 $sentecia->execute();
