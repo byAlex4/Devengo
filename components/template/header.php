@@ -87,21 +87,21 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="width: 50%;">
           <div class="navbar-nav" >
             <?php if ($_SESSION['rol'] == "Administrador") { ?>
-              <a class="nav-link" href="./main.php" style="color: #dddddd; !important">Inicio</a>
-              <a class="nav-link" href="./contratos.php" style="color: #dddddd; !important">Contratos</a>
-              <a class="nav-link" href="./devengos.php" style="color: #dddddd; !important">Devengos</a>
-              <a class="nav-link" href="./usuarios.php" style="color: #dddddd; !important">Usuarios</a>
-              <a class="nav-link" href="./unidades.php" style="color: #dddddd; !important">Unidades</a>
+              <a class="nav-link" href="./main.php" style="color: #ffffff; !important">Inicio</a>
+              <a class="nav-link" href="./contratos.php" style="color: #ffffff; !important">Contratos</a>
+              <a class="nav-link" href="./devengos.php" style="color: #ffffff; !important">Devengos</a>
+              <a class="nav-link" href="./usuarios.php" style="color: #ffffff; !important">Usuarios</a>
+              <a class="nav-link" href="./unidades.php" style="color: #ffffff; !important">Unidades</a>
             <?php } else { ?>
-              <a class="nav-link" href="./main.php" style="color: #dddddd; !important">Inicio</a>
-              <a class="nav-link" href="./devengos.php" style="color: #dddddd; !important">Devengo</a>
+              <a class="nav-link" href="./main.php" style="color: #ffffff; !important">Inicio</a>
+              <a class="nav-link" href="./devengos.php" style="color: #ffffff; !important">Devengo</a>
             <?php } ?>
           </div>
 
           <div class="navbar-nav ms-md-auto p-0 me-4" style="max-height: 57px; z-index: 1">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" id="navbarDropdown" data-bs-toggle="dropdown"
-                aria-expanded="false" style="color: #dddddd; !important">
+                aria-expanded="false" style="color: #ffffff; !important">
                 <?php echo $_SESSION['rol']; ?>
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="">
