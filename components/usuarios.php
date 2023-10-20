@@ -246,7 +246,7 @@ error_reporting(E_ALL);
                 'contra': contraseña,
                 'rol': rol
             },
-            //dataType: 'JSON',
+            dataType: 'JSON',
             success: function (data) {
                 Swal.fire({
                     title: '¡Hecho!',
