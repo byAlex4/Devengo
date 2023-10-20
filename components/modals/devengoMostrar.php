@@ -64,24 +64,23 @@ try {
                     </div>
                 </div>
                 <div class="row m-3">
+                    
                     <?php
                     // Crear un array para almacenar los montos por mes
                     $montosPorMes = array_fill(1, 12, 0);
-                    var_dump($sentencia);
 
-                    // Llenar el array con los resultados de la consulta
-                    foreach ($sentencia as $fila) {
-                        $montosPorMes[$fila['mes']] = $fila['total_mes'];
-                    }
+                    // Verificar si hay resultados
+                    if ($sentencia->rowCount() > 0) {
+                        // Crear una tabla para mostrar los datos
+                        echo "<div class='col-4'><p>Fecha</p></div><div class='col-4'><p class='float-end'>Total del mes</p></div> <div class='col-4'><p class='float-end'>Total acumulado</p></div><hr>";
+                        // Recorrer los resultados y mostrarlos en la tabla
+                        while ($fila = $sentencia->fetch(PDO::FETCH_ASSOC)) {
 
-                    // Recorrer el array $meses
-                    foreach ($meses as $numero => $nombre) {
-                        if ($nombre != "") {
-                            if ($montosPorMes[$numero] != 0) {
-                                // Mostrar el nombre del mes y el monto correspondiente
-                                echo "<div class='col-9'><p>$nombre</p></div><div class='col-3'><p class='float-end'>$" . $montosPorMes[$numero] . " </p></div> <hr>";
-                            }
+                            echo "<div class='col-4'><p>" . $fila["mes"] . "</p></div><div class='col-4'><p class='float-end'>$" . $fila["total_mes"] . " </p></div> <div class='col-4'><p class='float-end'>$" . $fila["total_acumulado"] . " </p></div><hr>";
                         }
+                    } else {
+                        // No hay resultados
+                        echo "No se encontraron datos";
                     }
                     ?>
                 </div>

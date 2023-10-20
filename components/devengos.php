@@ -109,6 +109,19 @@ error_reporting(E_ALL);
         });
     }
 
+    // Detectar la tecla Enter en cualquier input del formulario
+    $('#bscDesc, #bscMonto, #bscContrato, #bscUnidad, #bscFecha').keypress(function (e) {
+        // Obtener el código de la tecla presionada
+        var code = e.which;
+        // Si es igual a 13 (Enter)
+        if (code == 13) {
+            // Evitar el comportamiento por defecto del navegador
+            e.preventDefault();
+            // Simular un click en el botón buscar
+            $('.buscar').click();
+        }
+    });
+
     $(document).on('click', '.buscar', function (e) {
         var descripcion = $('#bscDesc').val();
         var monto = $('#bscMonto').val();

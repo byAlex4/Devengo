@@ -81,6 +81,19 @@ error_reporting(E_ALL);
         cargarDatos();
     });
 
+    // Detectar la tecla Enter en cualquier input del formulario
+    $('#buscarClave, #buscarNombre').keypress(function (e) {
+        // Obtener el código de la tecla presionada
+        var code = e.which;
+        // Si es igual a 13 (Enter)
+        if (code == 13) {
+            // Evitar el comportamiento por defecto del navegador
+            e.preventDefault();
+            // Simular un click en el botón buscar
+            $('.buscar').click();
+        }
+    });
+
     $(document).on('click', '.buscar', function (e) {
         var clave = $('#buscarClave').val();
         var nombre = $('#buscarNombre').val();
