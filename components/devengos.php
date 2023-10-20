@@ -93,7 +93,7 @@ error_reporting(E_ALL);
                         "<td>" + item.fecha + "</td>" +
                         "<td>" + item.descripcion + "</td>" +
                         "<td>" + item.monto + "</td>" +
-                        "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contrato + "'>" + item.contrato + "</button> </td>" +
+                        "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
                         "<td>" + item.saldo + "</td>" +
                         "<td>" + item.saldoDis + "</td>" +
                         "<td>" + item.unidad + "</td>" +
@@ -152,7 +152,7 @@ error_reporting(E_ALL);
                         "<td>" + item.fecha + "</td>" +
                         "<td>" + item.descripcion + "</td>" +
                         "<td>" + item.monto + "</td>" +
-                        "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contrato + "'>" + item.contrato + "</button> </td>" +
+                        "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
                         "<td>" + item.saldo + "</td>" +
                         "<td>" + item.saldoDis + "</td>" +
                         "<td>" + item.unidad + "</td>" +
@@ -243,23 +243,19 @@ error_reporting(E_ALL);
     });
 
     $(document).on('click', '.contr', function () {
-        var clave = $(this).data("id");
-        console.log(clave);
+        var id = $(this).data("id");
+        console.log(id);
         $.ajax({
             url: 'funciones/devengoPost.php',
             type: 'POST',
-            data: { 'contr': clave },
-            dataType: 'JSON',
+            data: { 'contr': id },
+            //dataType: 'JSON',
             success: function (data) {
                 console.log(data);
-                $('#formMostrar').val(data.clave);
-                $('#claveMostrar').text(data.clave);
-                $('#descMostrar').text(data.desc);
-                $('#maxMostrar').text(data.mont_max);
-                $('#saldoMostrar').text(data.saldo);
-                $('#minMostrar').text(data.min);
-                $('#iniMostrar').text(data.fecha_in);
-                $('#finMostrar').text(data.fecha_fin);
+                $('#contratoMostrar').html(data);
+            },
+            error: function () {
+                $('#contratoMostrar').html('<div>Error, no se encontro nada</div>');
             }
         })
     });
