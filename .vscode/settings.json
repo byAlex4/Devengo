@@ -8,7 +8,9 @@
         "scss",
         "php",
         "json",
-        "jsonc"
+        "jsonc",
+        "jsx",
+        "js"
     ],
     "better-comments.multilineComments": true,
     "better-comments.highlightPlainText": true,
