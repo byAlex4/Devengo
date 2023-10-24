@@ -76,8 +76,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-success bg-gradient" style="padding: 5px;">
       <div class="container-fluid">
         <a class="navbar-brand " href="./main.php" aria-label="Bootstrap">
-          <img class="img-fluid" src="img/imsslogo.png" width="40" height="40" alt="logoNav" class="d-block my-1"
-            fill="currentColor" />
+          <img src="img/imsslogo.png" width="40" height="45" alt="logoNav" class="d-block my-1" fill="currentColor" />
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
           aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">

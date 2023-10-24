@@ -13,19 +13,19 @@ error_reporting(E_ALL);
                 Crear devengo
             </button>
         </div>
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto; display: grid">
             <form action="post">
                 <div class="input-group mb-4">
                     <span class=" input-group-text">Descripcion</span>
-                    <input type="text" class="form-control" id="bscDesc" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscDesc" style="min-width: 100px;">
                     <span class="input-group-text">Montos</span>
-                    <input type="text" class="form-control" id="bscMonto" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscMonto" style="min-width: 100px;">
                     <span class="input-group-text">Contratos</span>
-                    <input type="text" class="form-control" id="bscContrato" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscContrato" style="min-width: 100px;">
                     <span class="input-group-text">Unidades</span>
-                    <input type="text" class="form-control" id="bscUnidad" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscUnidad" style="min-width: 100px;">
                     <span class="input-group-text">Fecha</span>
-                    <input type="month" class="form-control" id="bscFecha" style="max-width: 200px;">
+                    <input type="month" class="form-control" id="bscFecha" style="min-width: 100px;">
                     <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
                 </div>
             </form>

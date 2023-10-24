@@ -47,17 +47,14 @@
   <main style="margin: 2%;">
     <div class="container2">
       <div class="mb-3 text-center" style="display: flex;">
-        <div class="col-6 themed-grid-col1" ">
-          <main class="align-items-center">
-            <img  class ="doc" src="./img/docPhoto.png" alt="img_login">
-          </main>
+        <div class="col-6 themed-grid-col1 align-items-center">
+          <img class="doc" src="./img/docPhoto.png" alt="img_login"></img>
         </div>
         <div class="col-6 themed-grid-col2">
-          <main class="form-signin w-100 m-auto">
+          <div class="form-signin m-2" style='min-width: 95%;'>
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-              <img class="mb-4" src="img/logo-imss-green.png" alt="" width="40%" height="40%">
-
-              <h1 class="h2 mb-3 fw-normal">Por favor inicie sesión</h1>
+              <img class="mb-3" src="img/logo-imss-green.png" alt="logo imss" width="120px" height="140px">
+              <h2 class="mb-3 fw-normal">Iniciar sesión</h2>
               <div class="form-floating">
                 <input type="text" class="form-control" id="username" name="username">
                 <label for="username" style="color: gray">Matricula</label>
@@ -108,11 +105,12 @@
                 }
                 ?>
               </div>
-              <button class="btn btn-success w-100 py-2" type="submit" style="margin-top: 10%;">Iniciar sesión</button>
-              <p class="mt-5 mb-3 text-body-secondary"> Instituto Mexicano de Seguro&copy <br>
+              <button class="btn btn-success w-100 py-2" type="submit" style="margin-top: 10%;">Iniciar
+                sesión</button>
+              <p class="mt-5 mb-3"> Instituto Mexicano de Seguro&copy <br>
                 En caso de dudas comunicarse al 4491234567</p>
             </form>
-          </main>
+          </div>
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ error_reporting(E_ALL);
                 Crear usuario
             </button>
         </div>
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto; display: grid">
             <form action="post">
                 <div class="input-group mb-3">
                     <span class="input-group-text">Matricula</span>

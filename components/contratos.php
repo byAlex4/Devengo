@@ -13,17 +13,17 @@ error_reporting(E_ALL);
                 Crear contrato
             </button>
         </div>
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto; display: grid">
             <form action="post">
                 <div class="input-group mb-4">
                     <span class=" input-group-text">Clave</span>
-                    <input type="text" class="form-control" id="bscClave" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscClave" style="min-width: 100px;">
                     <span class="input-group-text">Descripcion</span>
-                    <input type="text" class="form-control" id="bscDesc" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscDesc" style="min-width: 100px;">
                     <span class="input-group-text">Monto</span>
-                    <input type="text" class="form-control" id="bscMonto" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="bscMonto" style="min-width: 100px;">
                     <span class="input-group-text">Mes</span>
-                    <input type="month" class="form-control" id="bscFecha" style="max-width: 200px;">
+                    <input type="month" class="form-control" id="bscFecha" style="min-width: 100px;">
                     <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
                 </div>
             </form>

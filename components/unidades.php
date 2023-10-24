@@ -6,13 +6,13 @@ error_reporting(E_ALL);
 <main class="bodymain">
     <div class="mt-3">
         <h1>Página de unidades</h1>
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto; display: grid">
             <form action="post">
-                <div class="input-group mb-4 ms-5" ">
+                <div class="input-group mb-4">
                     <span class=" input-group-text">Clave</span>
-                    <input type="text" class="form-control" id="buscarClave" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="buscarClave" style="min-width: 100px;">
                     <span class="input-group-text">Nombre</span>
-                    <input type="text" class="form-control" id="buscarNombre" style="max-width: 200px;">
+                    <input type="text" class="form-control" id="buscarNombre" style="min-width: 100px;">
                     <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
                 </div>
             </form>
