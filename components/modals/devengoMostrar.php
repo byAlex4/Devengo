@@ -1,9 +1,6 @@
 <?php
 $error = false;
 $config = include '../config.php';
-
-
-
 ?>
 <div class="modal-content">
     <div class="modal-header">
@@ -13,7 +10,6 @@ $config = include '../config.php';
     <div class="modal-body">
         <div class="card-body mx-4">
             <div class="container" style="place-content: center;" id="contratoMostrar">
-                
 
             </div>
         </div>

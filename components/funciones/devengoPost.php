@@ -172,6 +172,20 @@ if (
                         </div>
                         <hr style='border: 2px solid black;'>
                     </div>";
+            if ($contrato['saldoDis'] <= ($contrato['mont_max'] * 0.3)) {
+                $html .= "<script>Swal.fire(
+                            'Advertencia',
+                            'El saldo disponible supero el monto minimo del contrato',
+                            'warning')
+                        </script>";
+            }
+            if ($contrato['saldoDis'] <= 0) {
+                $html .= "<script>Swal.fire(
+                            'Advertencia',
+                            'El saldo del contrato es nullo o negativo',
+                            'error')
+                        </script>";
+            }
             echo ($html);
         } else {
             if (isset($_POST['editar'])) {
