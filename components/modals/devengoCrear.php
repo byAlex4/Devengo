@@ -14,6 +14,10 @@
                         <label for="fechaCrear" style="color: gray">Fecha de cargo</label>
                     </div>
                     <div class="form-floating mb-3">
+                        <input type="txt" id="proveedorCrear" class="form-control">
+                        <label for="proveedorCrear" style="color: gray">Proveedor</label>
+                    </div>
+                    <div class="form-floating mb-3">
                         <select class="form-select" id="contratoCrear" aria-label="Floating label select example">
                             <option value="0" selected>Selecciona el contrato</option>
                             <?php

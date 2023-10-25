@@ -9,7 +9,7 @@ if (
     || isset($_POST['bscUnidad'])
     || isset($_POST['bscFecha'])
 ) {
-    $consultaSQL = "SELECT devengos.id, devengos.fecha, devengos.descripcion, devengos.monto, 
+    $consultaSQL = "SELECT devengos.id, devengos.proveedros, devengos.fecha, devengos.descripcion, devengos.monto, 
     devengos.created_at, devengos.updated_at, 
     contratos.clave AS contrato, 
     contratos.mont_max AS saldo,
@@ -65,6 +65,7 @@ if (
             //Crear una respuesta
             $respuesta = array(
                 'id' => $show['id'],
+                'provedor' => $show['proveedros'],
                 'fecha' => $show['fecha'],
                 'clave' => $show['contratoID'],
                 'monto' => $show['monto'],
@@ -175,14 +176,14 @@ if (
             if ($contrato['saldoDis'] <= ($contrato['mont_max'] * 0.3)) {
                 $html .= "<script>Swal.fire(
                             'Advertencia',
-                            'El saldo disponible supero el monto minimo del contrato',
+                            'El saldo del contrato esta cerca de agotarse',
                             'warning')
                         </script>";
             }
             if ($contrato['saldoDis'] <= 0) {
                 $html .= "<script>Swal.fire(
                             'Advertencia',
-                            'El saldo del contrato es nullo o negativo',
+                            'El saldo del contrato es nullo',
                             'error')
                         </script>";
             }
@@ -193,13 +194,14 @@ if (
                 try {
                     // Obtener el valor de 'id' del cuerpo de la solicitud POST
                     $id = $_POST['editar'];
+                    $provedor = $_POST['provedor'];
                     $fecha = $_POST['fecha'];
                     $clave = $_POST['clave'];
                     $desc = $_POST['descripcion'];
                     $monto = $_POST['monto'];
                     $usuario = $_POST['usuario'];
 
-                    $consulta = "UPDATE devengos SET fecha='" . $fecha . "', descripcion= '" . $desc . "', monto='" . $monto . "', usuarioID='" . $usuario . "', contratoID='" . $clave . "', updated_at=NOW() WHERE id='" . $id . "'";
+                    $consulta = "UPDATE devengos SET proveedros='" . $provedor . "', fecha='" . $fecha . "', descripcion= '" . $desc . "', monto='" . $monto . "', usuarioID='" . $usuario . "', contratoID='" . $clave . "', updated_at=NOW() WHERE id='" . $id . "'";
                     $sentecia = $conexion->prepare($consulta);
                     $sentecia->execute();
                     $response = $sentecia;
@@ -209,7 +211,8 @@ if (
                 echo json_encode(array($response));
             } else {
                 if (
-                    isset($_POST['fecha'])
+                    isset($_POST['provedor'])
+                    && isset($_POST['fecha'])
                     && isset($_POST['monto'])
                     && isset($_POST['usuario'])
                     && isset($_POST['descripcion'])
@@ -217,6 +220,7 @@ if (
                 ) {
                     try {
                         $devengo = array(
+                            'proveedros' => $_POST['provedor'],
                             'fecha' => $_POST['fecha'],
                             'monto' => $_POST['monto'],
                             'descripcion' => $_POST['descripcion'],
@@ -224,7 +228,7 @@ if (
                             'contratoID' => $_POST['clave']
                         );
 
-                        $consultaCrear = "INSERT INTO devengos (fecha, monto, descripcion, usuarioID, contratoID)";
+                        $consultaCrear = "INSERT INTO devengos (proveedros, fecha, monto, descripcion, usuarioID, contratoID)";
                         $consultaCrear .= "VALUES (:" . implode(", :", array_keys($devengo)) . ")";
                         $sentenciaCrear = $conexion->prepare($consultaCrear);
                         $sentenciaCrear->execute($devengo); // Aquí pasamos el arreglo como parámetro

@@ -34,6 +34,7 @@ error_reporting(E_ALL);
                 <thead class="thead-primary" style="background-color: #a1d6aa; width: 100%;">
                     <tr>
                         <th>ID</th>
+                        <th>Proveedor</th>
                         <th>Fecha de cargo</th>
                         <th>Descripcion</th>
                         <th>Monto</th>
@@ -90,6 +91,7 @@ error_reporting(E_ALL);
                     // Creamos una fila con los datos de cada usuario
                     var fila = "<tr>" +
                         "<td>" + item.id + "</td>" +
+                        "<td>" + item.proveedros + "</td>" +
                         "<td>" + item.fecha + "</td>" +
                         "<td>" + item.descripcion + "</td>" +
                         "<td>" + item.monto + "</td>" +
@@ -149,6 +151,7 @@ error_reporting(E_ALL);
                     //Creamos una fila con los datos de cada usuario
                     var fila = "<tr>" +
                         "<td>" + item.id + "</td>" +
+                        "<td>" + item.proveedros + "</td>" +
                         "<td>" + item.fecha + "</td>" +
                         "<td>" + item.descripcion + "</td>" +
                         "<td>" + item.monto + "</td>" +
@@ -175,16 +178,18 @@ error_reporting(E_ALL);
     //Funcion de crear usuario
     $(document).on('click', '.crear', function (e) {
         e.preventDefault();
+        var provedor = $('#proveedorCrear').val();
         var fecha = $('#fechaCrear').val();
         var descripcion = $('#descCrear').val();
         var monto = $('#montoCrear').val();
         var usuario = $('#usuarioCrear').val();
         var clave = $('#contratoCrear').val();
-        console.log(fecha, monto, descripcion, usuario, clave);
+        console.log(provedor, fecha, monto, descripcion, usuario, clave);
         $.ajax({
             url: 'funciones/devengoPost.php',
             type: 'POST',
             data: {
+                'provedor': provedor,
                 'fecha': fecha,
                 'monto': monto,
                 'descripcion': descripcion,
@@ -202,6 +207,7 @@ error_reporting(E_ALL);
                 var table = $('#tablaDevengos');
                 table.animate({ opacity: '0', marginTop: '15%' }, "slow");
                 cargarDatos();
+                $('#proveedorCrear').val("");
                 $('#fechaCrear').val("");
                 $('#descCrear').val("");
                 $('#montoCrear').val("");
@@ -232,6 +238,7 @@ error_reporting(E_ALL);
             success: function (data) {
                 console.log(data);
                 $('#formEdit').val(data.id);
+                $('#proveedorEdit').val(data.provedor);
                 $('#idEdit').val(data.id);
                 $('#fechaEdit').val(data.fecha);
                 $('#contratoEdit').val(data.clave);
@@ -251,7 +258,6 @@ error_reporting(E_ALL);
             data: { 'contr': id },
             //dataType: 'JSON',
             success: function (data) {
-                console.log(data);
                 $('#contratoMostrar').html(data);
             },
             error: function () {
@@ -263,17 +269,19 @@ error_reporting(E_ALL);
     $(document).on('click', '.editar', function (e) {
         e.preventDefault();
         var id = $('#idEdit').val();
+        var provedor = $('#proveedorEdit').val();
         var fecha = $('#fechaEdit').val();
         var descripcion = $('#descEdit').val();
         var clave = $('#contratoEdit').val();
         var monto = $('#montoEdit').val();
         var usuario = $('#usuarioEdit').val();
-        console.log(id, fecha, monto, usuario, clave);
+        console.log(id, provedor, fecha, monto, usuario, clave);
         $.ajax({
             url: 'funciones/devengoPost.php',
             type: 'POST',
             data: {
                 'editar': id,
+                'provedor':provedor,
                 'fecha': fecha,
                 'descripcion': descripcion,
                 'clave': clave,

@@ -14,6 +14,10 @@
                             disabled>
                         <label for="idEdit" style="color: gray">ID</label>
                     </div>
+                     <div class="form-floating mb-3">
+                        <input type="txt" id="proveedorEdit" class="form-control">
+                        <label for="proveedorEdit" style="color: gray">Proveedor</label>
+                    </div>
                     <div class="form-floating mb-3">
                         <input type="date" id="fechaEdit" class="form-control">
                         <label for="fechaCrear" style="color: gray">Fecha de cargo</label>

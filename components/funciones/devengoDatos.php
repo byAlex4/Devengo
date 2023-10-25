@@ -6,7 +6,7 @@ try {
 
     // Preparamos la consulta SQL para obtener los datos de los usuarios, sus unidades y sus roles
     $stmt = $conexion->prepare(
-        'SELECT devengos.id, devengos.fecha, devengos.descripcion, devengos.monto, 
+        'SELECT devengos.id, devengos.proveedros , devengos.fecha, devengos.descripcion, devengos.monto, 
         devengos.created_at, devengos.updated_at, devengos.contratoID AS contratoID,
         contratos.clave AS contrato, 
         contratos.mont_max AS saldo,

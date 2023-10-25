@@ -50,6 +50,7 @@ CREATE TABLE
     devengos (
         id INT(10) AUTO_INCREMENT PRIMARY KEY,
         fecha DATE,
+        proveedros VARCHAR(50) NOT NULL,
         descripcion VARCHAR(50) NOT NULL,
         monto DECIMAL(10, 3) NOT NULL,
         usuarioID INT(10) NOT NULL,
