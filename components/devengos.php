@@ -281,7 +281,7 @@ error_reporting(E_ALL);
             type: 'POST',
             data: {
                 'editar': id,
-                'provedor':provedor,
+                'provedor': provedor,
                 'fecha': fecha,
                 'descripcion': descripcion,
                 'clave': clave,

@@ -98,12 +98,27 @@ if (
                 $contrato = $error;
             }
             try {
-                $consultaSQL = "SELECT SUM(monto) AS monto, DATE_FORMAT(fecha, '%M %Y') AS mes, 
-                SUM(monto) OVER (ORDER BY month(fecha)) AS acumulado
-                FROM `devengos`
+                $consultaSQL = "SELECT
+                    SUM(d.monto) AS monto,
+                    MONTH(d.fecha) AS mes,
+                    d.descripcion,
+                    SUM(d.monto) OVER (
+                        PARTITION BY u.unidadID
+                        ORDER BY
+                            month(d.fecha)
+                    ) AS acumulado,
+                    un.nombre AS unidad
+                FROM devengos d
+                    JOIN usuarios u ON d.usuarioID = u.id
+                    JOIN unidades un ON u.unidadID = un.id
                 WHERE `contratoID` = $id
-                GROUP BY month(fecha)
-                ORDER BY month(fecha) ASC;";
+                GROUP BY
+                    month(d.fecha),
+                    u.unidadID,
+                    d.descripcion -- agregar la descripción al GROUP BY
+                ORDER BY
+                    month(d.fecha) ASC,
+                    u.unidadID ASC;";
 
                 $sentencia = $conexion->prepare($consultaSQL);
                 $sentencia->execute();
@@ -111,7 +126,40 @@ if (
                 $error = $error->getMessage();
             }
 
-            $html = "<div class='row'>
+            $resultado = $sentencia;
+            // Crear un array vacío para guardar los datos
+            $output = array();
+
+            $meses = array(
+                1 => array("Enero", 0),
+                2 => array("Febrero", 0),
+                3 => array("Marzo", 0),
+                4 => array("Abril", 0),
+                5 => array("Mayo", 0),
+                6 => array("Junio", 0),
+                7 => array("Julio", 0),
+                8 => array("Agosto", 0),
+                9 => array("Septiembre", 0),
+                10 => array("Octubre", 0),
+                11 => array("Noviembre", 0),
+                12 => array("Diciembre", 0)
+            );
+
+            // Recorrer el objeto mysqli_result y obtener los datos de cada fila
+            while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
+                // Asignar los valores de monto, mes, acumulado y unidad a variables
+                $monto = $fila["monto"];
+                $mes = $fila["mes"];
+                $acumulado = $fila["acumulado"];
+                $unidad = $fila["unidad"];
+                $des = $fila["descripcion"];
+
+                // Agregar un array con los datos de cada fila al subarreglo correspondiente al mes
+                $output[$mes][] = array($monto, $acumulado, $unidad, $des);
+            }
+
+            $html = "
+            <div class='row'>
                         <div class='col-9'>
                             <ul class='list-unstyled'>
                                 <li class='h4 text-black mt-1'>
@@ -135,44 +183,50 @@ if (
                             </ul>
                         </div>
                     </div>
-                    <div class='row m-3'>
-                    ";
-            $total = 0;
-            // Verificar si hay resultados
-            if ($sentencia->rowCount() > 0) {
-                // Crear una tabla para mostrar los datos
-                $html .= "<div class='col-4'><p>Fecha</p></div><div class='col-6'><p class='float-end'>Total del mes</p></div> <hr>";
-                // Recorrer los resultados y mostrarlos en la tabla
-                while ($fila = $sentencia->fetch(PDO::FETCH_ASSOC)) {
-                    $html .= "<div class='col-4'><p>" . $fila['mes'] . "</p></div><div class='col-6'><p class='float-end'>$" . $fila['monto'] . "</p></div><hr>";
-                    $total = $fila['acumulado'];
-                }
-            } else {
-                // No hay resultados
-                $html .= "No se encontraron datos";
-            }
-            $html .= "</div>
-                    <div class='row text-black'>
-                        <div class='col-xl-12'>
-                            <p class='float-end fw-bold'>
-                                Total: $" . $total . "
-                            </p>
-                        </div>
-                        <hr style='border: 2px solid black;'>
-                        <div class='col-9'>
-                            <ul class='list-unstyled'>
-                                <li class='h4 text-black mt-1'>Saldo disponible:</li>
-                            </ul>
-                        </div>
-                        <div class='col-3'>
-                            <ul class='list-unstyled'>
-                                <li class='h4 text-black mt-1'>$" . $contrato['saldoDis'] . "</span>
-                                </li>
-                            </ul>
+            <div class='m-2' style='border-radius: 5%; box-shadow: 10px 10px 10px 20px gray'>
+    <div class='p-5' style='padding-bottom: 60px;'>
+        <table class='table table-striped-columns'>";
+            // Crear una variable auxiliar para guardar la unidad actual
+            $unidad_actual = '';
+            $total_contrato = 0;
+            // Recorrer el arreglo $output con un bucle foreach
+            foreach ($output as $mes => $datos) {
+                // Obtener el nombre del mes usando el índice del arreglo $meses
+                $nombre_mes = $meses[$mes][0];
+                $total_mes = 0;
+                // Mostrar el nombre del mes en una nueva fila con un salto de línea
+                $html .= "
+            <tr>
+                <th class='h1 text-md-center' colspan='4'>$nombre_mes</th>
+            </tr>
+            <tr>
+                <th>Unidad</th>
+                <th>Descripcion</th>
+                <th>Monto</th>
+                <th>Acumulado</th>
+            </tr>";
+                // Recorrer el subarreglo de cada mes con otro bucle foreach
+                foreach ($datos as $dato) {
+                    // Obtener los valores de monto, acumulado y unidad de cada fila
+                    $monto = $dato[0];
+                    $acumulado = $dato[1];
+                    $unidad = $dato[2];
+                    $desc = $dato[3];
 
-                        </div>
-                        <hr style='border: 2px solid black;'>
-                    </div>";
+
+                    // Generar el código HTML de cada celda de la tabla con los datos encontrados
+                    $html .= "<tr><td>$unidad</td><td>$desc</td><td>$ $monto</td><td>$ $acumulado</td></tr>";
+                    $total_mes += $monto;
+                }
+                $html .= "<tr><td class='h4' colspan='4'>Total del mes: <p class=' text-muted float-end'>$ $total_mes</p></td></tr>";
+                $total_contrato += $total_mes;
+            }
+            $html .= "
+            </tbody>
+        </table>
+        <h3>Total del contrato<p class='text-muted float-end'>$ $total_contrato</p></h3>
+    </div>
+</div>";
             if ($contrato['saldoDis'] <= ($contrato['mont_max'] * 0.3)) {
                 $html .= "<script>Swal.fire(
                             'Advertencia',
