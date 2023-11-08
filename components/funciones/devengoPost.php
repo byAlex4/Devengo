@@ -271,7 +271,6 @@ if (
                     && isset($_POST['descripcion'])
                     && isset($_POST['clave'])
                 ) {
-                    $conexion->beginTransaction();
                     try {
                         $devengo = array(
                             'proveedros' => $_POST['provedor'],
@@ -287,25 +286,8 @@ if (
                         $sentenciaCrear = $conexion->prepare($consultaCrear);
                         $sentenciaCrear->execute($devengo); // Aquí pasamos el arreglo como parámetro
 
-                        // Obtiene el monto máximo del contrato
-                        $consultaDis = "SELECT mont_max FROM contratos WHERE id = :contratoID";
-                        $sentenciaDis = $conexion->prepare($consultaDis);
-                        $sentenciaDis->execute(array('contratoID' => $devengo['contratoID']));
-                        $montoMax = $sentenciaDis->fetchColumn();
-
-                        // Compara el monto del devengo con el monto máximo del contrato
-                        if ($devengo['monto'] > $montoMax) {
-                            // Lanza una excepción
-                            throw new Exception("El monto del devengo es mayor al monto máximo del contrato");
-                        } else {
-                            // Confirma la transacción
-                            $conexion->commit();
-                            echo json_encode(array($devengo));
-                        }
+                        echo json_encode(array($devengo));
                     } catch (PDOException $error) {
-                        // Deshace la transacción
-                        $conexion->rollBack();
-
                         echo json_encode(array('error' => true, 'mensaje' => $error->getMessage()));
                         echo json_encode(array($devengo));
                     }
