@@ -8,7 +8,7 @@ $config = include '../config.php';
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-        <div class="card-body mx-4">
+        <div class="card-body" style='margin-left: 5%; margin-right: 5%;'>
             <div class="mb-5" style="place-content: center;" id="contratoMostrar">
 
             </div>

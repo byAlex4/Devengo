@@ -180,8 +180,9 @@ if (
                             </ul>
                         </div>
                     </div>
-            <div class='m-2' style='border-radius: 5%; box-shadow: 10px 10px 10px 20px gray'>
-        <div class='p-5'>
+            <div style='border-radius: 5%; box-shadow: 10px 10px 10px 20px gray'>
+        <div style='padding: 5%'>
+        <div style='overflow-x: auto; display: grid'>
         <table class='table table-striped-columns'>";
             // Crear una variable auxiliar para guardar la unidad actual
             $unidad_actual = '';
@@ -221,6 +222,7 @@ if (
             $html .= "
                         </tbody>
                     </table>
+                    </div>
                     <h3>Total del contrato<p class='text-muted float-end'>$$total_contrato</p></h3>
                 </div>
             </div>";

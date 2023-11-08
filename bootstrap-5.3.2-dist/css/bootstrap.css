@@ -2457,6 +2457,7 @@ progress {
 
 @media screen and (max-width: 800px) {
   .container2 {
+    margin-top: 15%;
     margin-left: 9%;
     width: 92%;
     border-color: #5a23c8;
