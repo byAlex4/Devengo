@@ -85,7 +85,8 @@ if (
             try {
                 // Obtener el valor de 'id' del cuerpo de la solicitud POST
                 $id = $_POST['contr'];
-                $consulta = "SELECT *, 
+                $consulta = "SELECT contratos.clave, contratos.descripcion, contratos.mont_max, contratos.mont_min,
+                contratos.fecha_in, contratos.fecha_fin ,
                 (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldoDis 
                 FROM contratos WHERE contratos.id = $id";
 
@@ -186,12 +187,12 @@ if (
         <table class='table table-striped-columns'>";
             // Crear una variable auxiliar para guardar la unidad actual
             $unidad_actual = '';
-            $total_contrato = 0;
+            $total_contrato = 0.000;
             // Recorrer el arreglo $output con un bucle foreach
             foreach ($output as $mes => $datos) {
                 // Obtener el nombre del mes usando el índice del arreglo $meses
                 $nombre_mes = $meses[$mes][0];
-                $total_mes = 0;
+                $total_mes = 0.000;
                 // Mostrar el nombre del mes en una nueva fila con un salto de línea
                 $html .= "
                     <tr>
@@ -215,9 +216,12 @@ if (
                     // Generar el código HTML de cada celda de la tabla con los datos encontrados
                     $html .= "<tr><td>$unidad</td><td>$desc</td><td>$ $monto</td><td>$ $acumulado</td></tr>";
                     $total_mes += $monto;
+                    $total_mes = number_format($total_mes, 3, '.', '');
                 }
                 $html .= "<tr><td class='h4' colspan='4'>Total del mes: <p class='text-muted float-end'>$ $total_mes</p></td></tr>";
+
                 $total_contrato += $total_mes;
+                $total_contrato = number_format($total_contrato, 3, '.', '');
             }
             $html .= "
                         </tbody>

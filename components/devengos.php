@@ -94,7 +94,7 @@ error_reporting(E_ALL);
                         "<td>" + item.proveedros + "</td>" +
                         "<td>" + item.fecha + "</td>" +
                         "<td>" + item.descripcion + "</td>" +
-                        "<td>" + item.monto + "</td>" +
+                        "<td>" + item.monto_formato + "</td>" +
                         "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
                         "<td>" + item.saldo + "</td>" +
                         "<td>" + item.saldoDis + "</td>" +

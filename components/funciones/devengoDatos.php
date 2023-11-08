@@ -6,17 +6,18 @@ try {
 
     // Preparamos la consulta SQL para obtener los datos de los usuarios, sus unidades y sus roles
     $stmt = $conexion->prepare(
-        'SELECT devengos.id, devengos.proveedros , devengos.fecha, devengos.descripcion, devengos.monto, 
+        "SELECT devengos.id, devengos.proveedros , devengos.fecha, devengos.descripcion, 
+        FORMAT(devengos.monto, 3) AS monto_formato, 
         devengos.created_at, devengos.updated_at, devengos.contratoID AS contratoID,
         contratos.clave AS contrato, 
-        contratos.mont_max AS saldo,
+        FORMAT(contratos.mont_max, 3) AS saldo,
         (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldoDis, 
         usuarios.nombre AS usuario, 
         unidades.nombre AS unidad 
         FROM devengos 
         JOIN contratos ON devengos.contratoID = contratos.id 
         JOIN usuarios ON devengos.usuarioID = usuarios.id 
-        JOIN unidades ON usuarios.unidadID = unidades.id'
+        JOIN unidades ON usuarios.unidadID = unidades.id"
     );
 
 
