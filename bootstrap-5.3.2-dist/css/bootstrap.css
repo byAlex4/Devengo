@@ -2168,23 +2168,15 @@ progress {
   --bs-table-bg-type: initial;
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
-  --bs-table-color: var(
-  --bs-emphasis-color);
-  --bs-table-border-color: var(
-  --bs-border-color);
+  --bs-table-color: var(--bs-emphasis-color);
+  --bs-table-border-color: var(--bs-border-color);
   --bs-table-accent-bg: transparent;
-  --bs-table-striped-color: var(
-  --bs-emphasis-color);
-  --bs-table-striped-bg: rgba(var(
-  --bs-emphasis-color-rgb), 0.05);
-  --bs-table-active-color: var(
-  --bs-emphasis-color);
-  --bs-table-active-bg: rgba(var(
-  --bs-emphasis-color-rgb), 0.1);
-  --bs-table-hover-color: var(
-  --bs-emphasis-color);
-  --bs-table-hover-bg: rgba(var(
-  --bs-emphasis-color-rgb), 0.075);
+  --bs-table-striped-color: var(--bs-emphasis-color);
+  --bs-table-striped-bg: rgba(var(--bs-emphasis-color-rgb), 0.05);
+  --bs-table-active-color: var(--bs-emphasis-color);
+  --bs-table-active-bg: rgba(var(--bs-emphasis-color-rgb), 0.1);
+  --bs-table-hover-color: var(--bs-emphasis-color);
+  --bs-table-hover-bg: rgba(var(--bs-emphasis-color-rgb), 0.075);
   width: 100%;
   margin-bottom: 1rem;
   vertical-align: top;
@@ -2430,9 +2422,19 @@ progress {
   font-size: 0.875rem;
 }
 
+@media screen and (min-width: 1400px) {
+  .container2 {
+    margin: 3%;
+    margin-left: 16%;
+    max-width: 60%;
+    border-color: #5a23c8;
+    border: 15px;
+  }
+}
+
 @media screen and (min-width: 801px) {
   .container2 {
-    margin-left: 20%;
+    margin-left: 16%;
     max-width: 60%;
     border-color: #5a23c8;
     border: 15px;

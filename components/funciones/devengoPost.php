@@ -162,14 +162,11 @@ if (
             <div class='row'>
                         <div class='col-9'>
                             <ul class='list-unstyled'>
-                                <li class='h4 text-black mt-1'>
-                                    <h3>Contrato:</h3>
-                                </li>
+                                <li class='h4 text-black mt-1'>Contrato:</li>
                                 <li class='h4 text-black mt-1'>Fecha de inicio:</li>
                                 <li class='h4 text-black mt-1'>Fecha de fin:</li>
                                 <li class='h4 text-black mt-1'>Monto maximo:</li>
                                 <li class='h4 text-black mt-1'>Monto minimo:</li>
-                    
                             </ul>
                         </div>
                         <div class='col-3' style='text-align: right;'>
@@ -184,7 +181,7 @@ if (
                         </div>
                     </div>
             <div class='m-2' style='border-radius: 5%; box-shadow: 10px 10px 10px 20px gray'>
-    <div class='p-5' style='padding-bottom: 60px;'>
+        <div class='p-5'>
         <table class='table table-striped-columns'>";
             // Crear una variable auxiliar para guardar la unidad actual
             $unidad_actual = '';
@@ -196,15 +193,15 @@ if (
                 $total_mes = 0;
                 // Mostrar el nombre del mes en una nueva fila con un salto de línea
                 $html .= "
-            <tr>
-                <th class='h1 text-md-center' colspan='4'>$nombre_mes</th>
-            </tr>
-            <tr>
-                <th>Unidad</th>
-                <th>Descripcion</th>
-                <th>Monto</th>
-                <th>Acumulado</th>
-            </tr>";
+                    <tr>
+                        <th class='h4 text-md-center' colspan='4'>$nombre_mes</th>
+                    </tr>
+                    <tr>
+                        <th>Unidad</th>
+                        <th>Descripcion</th>
+                        <th>Monto</th>
+                        <th>Acumulado</th>
+                    </tr>";
                 // Recorrer el subarreglo de cada mes con otro bucle foreach
                 foreach ($datos as $dato) {
                     // Obtener los valores de monto, acumulado y unidad de cada fila
@@ -218,15 +215,15 @@ if (
                     $html .= "<tr><td>$unidad</td><td>$desc</td><td>$ $monto</td><td>$ $acumulado</td></tr>";
                     $total_mes += $monto;
                 }
-                $html .= "<tr><td class='h4' colspan='4'>Total del mes: <p class=' text-muted float-end'>$ $total_mes</p></td></tr>";
+                $html .= "<tr><td class='h4' colspan='4'>Total del mes: <p class='text-muted float-end'>$ $total_mes</p></td></tr>";
                 $total_contrato += $total_mes;
             }
             $html .= "
-            </tbody>
-        </table>
-        <h3>Total del contrato<p class='text-muted float-end'>$ $total_contrato</p></h3>
-    </div>
-</div>";
+                        </tbody>
+                    </table>
+                    <h3>Total del contrato<p class='text-muted float-end'>$$total_contrato</p></h3>
+                </div>
+            </div>";
             if ($contrato['saldoDis'] <= ($contrato['mont_max'] * 0.3)) {
                 $html .= "<script>Swal.fire(
                             'Advertencia',
@@ -272,6 +269,7 @@ if (
                     && isset($_POST['descripcion'])
                     && isset($_POST['clave'])
                 ) {
+                    $conexion->beginTransaction();
                     try {
                         $devengo = array(
                             'proveedros' => $_POST['provedor'],
@@ -287,10 +285,26 @@ if (
                         $sentenciaCrear = $conexion->prepare($consultaCrear);
                         $sentenciaCrear->execute($devengo); // Aquí pasamos el arreglo como parámetro
 
-                        echo json_encode(array($devengo));
+                        // Obtiene el monto máximo del contrato
+                        $consultaDis = "SELECT mont_max FROM contratos WHERE id = :contratoID";
+                        $sentenciaDis = $conexion->prepare($consultaDis);
+                        $sentenciaDis->execute(array('contratoID' => $devengo['contratoID']));
+                        $montoMax = $sentenciaDis->fetchColumn();
+
+                        // Compara el monto del devengo con el monto máximo del contrato
+                        if ($devengo['monto'] > $montoMax) {
+                            // Lanza una excepción
+                            throw new Exception("El monto del devengo es mayor al monto máximo del contrato");
+                        } else {
+                            // Confirma la transacción
+                            $conexion->commit();
+                            echo json_encode(array($devengo));
+                        }
                     } catch (PDOException $error) {
+                        // Deshace la transacción
+                        $conexion->rollBack();
+
                         echo json_encode(array('error' => true, 'mensaje' => $error->getMessage()));
-                        echo json_encode(array($consultaCrear));
                         echo json_encode(array($devengo));
                     }
 

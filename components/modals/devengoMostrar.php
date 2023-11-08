@@ -9,7 +9,7 @@ $config = include '../config.php';
     </div>
     <div class="modal-body">
         <div class="card-body mx-4">
-            <div class="container mb-5" style="place-content: center;" id="contratoMostrar">
+            <div class="mb-5" style="place-content: center;" id="contratoMostrar">
 
             </div>
         </div>
