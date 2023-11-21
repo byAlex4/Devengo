@@ -77,7 +77,7 @@
                     // Preparar la consulta SQL
                     $stmt = $conexion->prepare(
                       "SELECT usuarios.matricula, usuarios.nombre, unidades.nombre AS unidad, roles.nombre AS rol, usuarios.contra 
-                      FROM usuarios 
+                      FROM usuarios  
                       JOIN unidades ON usuarios.unidadID = unidades.id 
                       JOIN roles ON usuarios.rolID = roles.id
                       WHERE matricula = ?"
