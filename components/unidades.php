@@ -3,6 +3,7 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 ?>
+<script>document.title = "Unidades | Devengo";</script>
 <main class="bodymain">
     <div class="mt-3">
         <h1>Página de unidades</h1>

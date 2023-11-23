@@ -3,6 +3,7 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 ?>
+<script>document.title = "Contratos | Devengo";</script>
 <main class="bodymain">
     <div class="mt-3">
         <h1>Página de contratos</h1>
@@ -17,13 +18,15 @@ error_reporting(E_ALL);
             <form action="post">
                 <div class="input-group mb-4">
                     <span class=" input-group-text">Clave</span>
-                    <input type="text" class="form-control" id="bscClave" style="min-width: 100px;">
+                    <input type="text" class="form-control" id="bscClave" style="min-width: 100px; max-width: 130px;">
+                    <span class=" input-group-text">Proveedor</span>
+                    <input type="text" class="form-control" id="bscProv" style="min-width: 100px; ">
                     <span class="input-group-text">Descripcion</span>
                     <input type="text" class="form-control" id="bscDesc" style="min-width: 100px;">
                     <span class="input-group-text">Monto</span>
                     <input type="text" class="form-control" id="bscMonto" style="min-width: 100px;">
                     <span class="input-group-text">Mes</span>
-                    <input type="month" class="form-control" id="bscFecha" style="min-width: 100px;">
+                    <input type="month" class="form-control" id="bscFecha" style="min-width: 100px; ">
                     <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
                 </div>
             </form>
@@ -33,6 +36,7 @@ error_reporting(E_ALL);
                     <tr>
                         <th>ID</th>
                         <th>Clave</th>
+                        <th>Proveedor</th>
                         <th>Descripcipón</th>
                         <th>Monto Maximo</th>
                         <th>Monton Minimo</th>
@@ -80,24 +84,34 @@ error_reporting(E_ALL);
             type: "GET",
             dataType: "JSON",
             success: function (data) {
-                $.each(data, function (i, item) {
-                    // Creamos una fila con los datos de cada conjtrato
+                if (data.length <= 0) {
                     var fila = "<tr>" +
-                        "<td>" + item.id + "</td>" +
-                        "<td>" + item.clave + "</td>" +
-                        "<td>" + item.descripcion + "</td>" +
-                        "<td>" + item.mont_max + "</td>" +
-                        "<td>" + item.mont_min + "</td>" +
-                        "<td>" + item.fecha_in + "</td>" +
-                        "<td>" + item.fecha_fin + "</td>" +
-                        "<td>" + item.created_at + "</td>" +
-                        "<td>" + item.updated_at + "</td>" +
-                        "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                        "<td colspan='11'>No se encontraron contratos</td>" +
                         "</tr>";
                     $("tbody").append(fila);
-                });
-                var table = $('#tablaContratos');
-                table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                    var table = $('#tablaContratos');
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                } else {
+                    $.each(data, function (i, item) {
+                        // Creamos una fila con los datos de cada conjtrato
+                        var fila = "<tr>" +
+                            "<td>" + item.id + "</td>" +
+                            "<td>" + item.clave + "</td>" +
+                            "<td>" + item.proveedor + "</td>" +
+                            "<td>" + item.descripcion + "</td>" +
+                            "<td>" + item.mont_max + "</td>" +
+                            "<td>" + item.mont_min + "</td>" +
+                            "<td>" + item.fecha_in + "</td>" +
+                            "<td>" + item.fecha_fin + "</td>" +
+                            "<td>" + item.created_at + "</td>" +
+                            "<td>" + item.updated_at + "</td>" +
+                            "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                            "</tr>";
+                        $("tbody").append(fila);
+                    });
+                    var table = $('#tablaContratos');
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow")
+                }
             }
         });
     }
@@ -108,7 +122,7 @@ error_reporting(E_ALL);
     });
 
     // Detectar la tecla Enter en cualquier input del formulario
-    $('#bscClave, #bscDesc, #bscMonto, #bscFecha').keypress(function (e) {
+    $('#bscClave, #bscDesc, #bscMonto, #bscFecha, #bscProv').keypress(function (e) {
         // Obtener el código de la tecla presionada
         var code = e.which;
         // Si es igual a 13 (Enter)
@@ -125,7 +139,8 @@ error_reporting(E_ALL);
         var descripcion = $('#bscDesc').val();
         var monto = $('#bscMonto').val();
         var fecha = $('#bscFecha').val();
-        console.log(clave, descripcion, monto, fecha);
+        var proveedor = $('#bscProv').val();
+        console.log(clave, proveedor, descripcion, monto, fecha);
         $.ajax({
             url: 'funciones/contratoPost.php',
             type: 'POST',
@@ -133,7 +148,8 @@ error_reporting(E_ALL);
                 'bscClave': clave,
                 'bscDesc': descripcion,
                 'bscMonto': monto,
-                'bscFecha': fecha
+                'bscFecha': fecha,
+                'bscProveedor': proveedor
             },
             dataType: 'JSON',
             success: function (data) {
@@ -141,23 +157,33 @@ error_reporting(E_ALL);
                 var table = $('#tablaContratos');
                 $("tbody").empty();
                 table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
-                $.each(data, function (i, item) {
-                    // Creamos una fila con los datos de cada conjtrato
+                if (data.length <= 0) {
+                    $("tbody").empty();
                     var fila = "<tr>" +
-                        "<td>" + item.id + "</td>" +
-                        "<td>" + item.clave + "</td>" +
-                        "<td>" + item.descripcion + "</td>" +
-                        "<td>" + item.mont_max + "</td>" +
-                        "<td>" + item.mont_min + "</td>" +
-                        "<td>" + item.fecha_in + "</td>" +
-                        "<td>" + item.fecha_fin + "</td>" +
-                        "<td>" + item.created_at + "</td>" +
-                        "<td>" + item.updated_at + "</td>" +
-                        "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                        "<td colspan='11'>No se encontraron contratos</td>" +
                         "</tr>";
                     $("tbody").append(fila);
-                });
-                table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                } else {
+                    $.each(data, function (i, item) {
+                        // Creamos una fila con los datos de cada conjtrato
+                        var fila = "<tr>" +
+                            "<td>" + item.id + "</td>" +
+                            "<td>" + item.clave + "</td>" +
+                            "<td>" + item.proveedor + "</td>" +
+                            "<td>" + item.descripcion + "</td>" +
+                            "<td>" + item.mont_max + "</td>" +
+                            "<td>" + item.mont_min + "</td>" +
+                            "<td>" + item.fecha_in + "</td>" +
+                            "<td>" + item.fecha_fin + "</td>" +
+                            "<td>" + item.created_at + "</td>" +
+                            "<td>" + item.updated_at + "</td>" +
+                            "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                            "</tr>";
+                        $("tbody").append(fila);
+                    });
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                }
             }
         })
     });
@@ -170,7 +196,43 @@ error_reporting(E_ALL);
         var mont_min = $('#minCrear').val();
         var fecha_in = $('#iniCrear').val();
         var fecha_fin = $('#finCrear').val();
-        console.log(clave, descripcion, mont_max, mont_min, fecha_in, fecha_fin);
+        var proveedor = $('#provCrear').val();
+        mont_min = parseFloat(mont_min);
+        mont_max = parseFloat(mont_max);
+        var objfecha_in = new Date(fecha_in);
+        var objfecha_fin = new Date(fecha_fin);
+        if (clave == "" || descripcion == "" || isNaN(mont_max) || isNaN(mont_min) ||
+            isNaN(objfecha_in.getTime()) || isNaN(objfecha_in.getTime()) || proveedor == "") {
+            Swal.fire({
+                title: 'Advertecia!',
+                text: 'Favor de llenar todos los campos',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            // Cancelar el envío de la solicitud
+            return;
+        }
+        if (mont_min > mont_max) {
+            Swal.fire({
+                title: 'Advertecia!',
+                text: 'El monto mínimo no puede ser mayor al monto máximo',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            // Cancelar el envío de la solicitud
+            return;
+        }
+
+        if (fecha_fin < fecha_in) {
+            Swal.fire({
+                title: 'Advertecia!',
+                text: 'La fecha final no puede ser antes a la fecha de inicio',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            // Cancelar el envío de la solicitud
+            return;
+        }
         $.ajax({
             url: 'funciones/contratoPost.php',
             type: 'POST',
@@ -180,7 +242,8 @@ error_reporting(E_ALL);
                 'mont_max': mont_max,
                 'mont_min': mont_min,
                 'fecha_in': fecha_in,
-                'fecha_fin': fecha_fin
+                'fecha_fin': fecha_fin,
+                'proveedor': proveedor
             },
             dataType: 'JSON',
             success: function (data) {
@@ -231,6 +294,7 @@ error_reporting(E_ALL);
                 $('#minEdit').val(data.mont_min);
                 $('#iniEdit').val(data.fecha_in);
                 $('#finEdit').val(data.fecha_fin);
+                $('#provEdit').val(data.proveedor);
             }
         })
     });
@@ -244,7 +308,45 @@ error_reporting(E_ALL);
         var mont_min = $('#minEdit').val();
         var fecha_in = $('#iniEdit').val();
         var fecha_fin = $('#finEdit').val();
-        console.log(id, clave, descripcion, mont_max, mont_min, fecha_in, fecha_fin);
+        var proveedor = $('#provEdit').val();
+
+        mont_min = parseFloat(mont_min);
+        mont_max = parseFloat(mont_max);
+        var objfecha_in = new Date(fecha_in);
+        var objfecha_fin = new Date(fecha_fin);
+        if (clave == "" || descripcion == "" || isNaN(mont_max) || isNaN(mont_min) ||
+            isNaN(objfecha_in.getTime()) || isNaN(objfecha_in.getTime()) || proveedor == "") {
+            Swal.fire({
+                title: 'Advertecia!',
+                text: 'Favor de llenar todos los campos',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            // Cancelar el envío de la solicitud
+            return;
+        }
+        if (mont_min > mont_max) {
+            Swal.fire({
+                title: 'Advertecia!',
+                text: 'El monto mínimo no puede ser mayor al monto máximo',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            // Cancelar el envío de la solicitud
+            return;
+        }
+
+        if (fecha_fin < fecha_in) {
+            Swal.fire({
+                title: 'Advertecia!',
+                text: 'La fecha final no puede ser antes a la fecha de inicio',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            // Cancelar el envío de la solicitud
+            return;
+        }
+
         $.ajax({
             url: 'funciones/contratoPost.php',
             type: 'POST',
@@ -255,7 +357,8 @@ error_reporting(E_ALL);
                 'mont_max': mont_max,
                 'mont_min': mont_min,
                 'fecha_in': fecha_in,
-                'fecha_fin': fecha_fin
+                'fecha_fin': fecha_fin,
+                'proveedor': proveedor
             },
             dataType: 'JSON',
             success: function (data) {

@@ -17,6 +17,10 @@
                     <label for="desCrear" style="color: gray">Descripcion</label>
                 </div>
                 <div class="form-floating mb-3">
+                    <input type="text" id="provCrear" class="form-control">
+                    <label for="provCrear" style="color: gray">Proveedor</label>
+                </div>
+                <div class="form-floating mb-3">
                     <input type="text" id="maxCrear" class="form-control">
                     <label for="maxCrear" style="color: gray">Monto maximo</label>
                 </div>

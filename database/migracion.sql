@@ -36,6 +36,7 @@ CREATE TABLE
 CREATE TABLE
     contratos (
         id INT(10) AUTO_INCREMENT PRIMARY KEY,
+        proveedor VARCHAR(50) NOT NULL,
         clave VARCHAR(20) NOT NULL UNIQUE,
         descripcion VARCHAR(50) NOT NULL,
         mont_max DECIMAL(10, 3) NOT NULL,
@@ -50,7 +51,6 @@ CREATE TABLE
     devengos (
         id INT(10) AUTO_INCREMENT PRIMARY KEY,
         fecha DATE,
-        proveedros VARCHAR(50) NOT NULL,
         descripcion VARCHAR(50) NOT NULL,
         monto DECIMAL(10, 3) NOT NULL,
         usuarioID INT(10) NOT NULL,

@@ -7,6 +7,7 @@ if (
     || isset($_POST['bscDesc'])
     || isset($_POST['bscMonto'])
     || isset($_POST['bscFecha'])
+    || isset($_POST['bscProveedor'])
 ) {
     $consultaSQL = "SELECT * FROM contratos ";
     if (!empty($_POST['bscClave'])) {
@@ -21,21 +22,15 @@ if (
     if (!empty($_POST['bscFecha'])) {
         $consultaSQL .= "WHERE DATE_FORMAT(fecha_in, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
     }
-
+    if (!empty($_POST['bscProveedor'])) {
+        $consultaSQL .= "WHERE proveedor = '" . $_POST['bscProveedor'] . "'";
+    }
     $sentecia = $conexion->prepare($consultaSQL);
     $sentecia->execute();
 
     $resultados = $sentecia->fetchAll(PDO::FETCH_ASSOC);
-
-    // Comprobamos si hay resultados
-    if (count($resultados) > 0) {
-        // Devolvemos el resultado en formato JSON
-        echo json_encode($resultados);
-    } else {
-        // Mostramos un mensaje indicando que no hay resultados
-        echo json_encode(array("message" => "No se la unidad"));
-    }
-
+    // Devolvemos el resultado en formato JSON
+    echo json_encode($resultados);
 } else {
     if (isset($_POST['shw'])) {
         try {
@@ -55,7 +50,8 @@ if (
                 'mont_max' => $show['mont_max'],
                 'mont_min' => $show['mont_min'],
                 'fecha_in' => $show['fecha_in'],
-                'fecha_fin' => $show['fecha_fin']
+                'fecha_fin' => $show['fecha_fin'],
+                'proveedor' => $show['proveedor']
             );
             $json = $respuesta;
             // Devolver la respuesta como JSON
@@ -76,8 +72,11 @@ if (
                 $mont_min = $_POST['mont_min'];
                 $fecha_in = $_POST['fecha_in'];
                 $fecha_fin = $_POST['fecha_fin'];
+                $proveedor = $_POST['proveedor'];
 
-                $consulta = "UPDATE contratos SET clave='" . $clave . "', descripcion='" . $descripcion . "', mont_max=" . $mont_max . ", mont_min=" . $mont_min . ", fecha_in='" . $fecha_in . "', fecha_fin='" . $fecha_fin . "', updated_at = NOW() WHERE id='" . $id . "'";
+                $consulta = "UPDATE contratos SET proveedor='" . $proveedor . "', clave='" . $clave . "', descripcion='" . $descripcion . "', 
+                mont_max=" . $mont_max . ", mont_min=" . $mont_min . ", fecha_in='" . $fecha_in . "', fecha_fin='" . $fecha_fin . "', 
+                updated_at = NOW() WHERE id='" . $id . "'";
                 $sentecia = $conexion->prepare($consulta);
                 $sentecia->execute();
                 $response = $sentecia;
@@ -93,6 +92,7 @@ if (
                 && isset($_POST['mont_min'])
                 && isset($_POST['fecha_in'])
                 && isset($_POST['fecha_fin'])
+                && isset($_POST['proveedor'])
             ) {
                 try {
                     $contrato = array(
@@ -101,10 +101,11 @@ if (
                         'mont_max' => $_POST['mont_max'],
                         'mont_min' => $_POST['mont_min'],
                         'fecha_in' => $_POST['fecha_in'],
-                        'fecha_fin' => $_POST['fecha_fin']
+                        'fecha_fin' => $_POST['fecha_fin'],
+                        'proveedor' => $_POST['proveedor']
                     );
 
-                    $consultaCrear = "INSERT INTO contratos (clave, descripcion, mont_max, mont_min, fecha_in, fecha_fin)";
+                    $consultaCrear = "INSERT INTO contratos (clave, descripcion, mont_max, mont_min, fecha_in, fecha_fin, proveedor)";
                     $consultaCrear .= "VALUES (:" . implode(", :", array_keys($contrato)) . ")";
 
                     $sentenciaCrear = $conexion->prepare($consultaCrear);

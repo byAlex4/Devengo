@@ -27,7 +27,7 @@ $sentecia4 = $conexion->prepare("SELECT COUNT(*) FROM unidades");
 $sentecia4->execute();
 $resultado4 = $sentecia4->fetchColumn();
 ?>
-
+<script>document.title = "Inicio | Devengo";</script>
 <main class="bodymain mt-3">
   <h1 class="text-gray-800">Página principal</h1>
   <div class="row mb-4">

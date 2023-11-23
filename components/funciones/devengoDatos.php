@@ -12,7 +12,6 @@ try {
         $stmt = $conexion->prepare(
             "SELECT
             devengos.id,
-            devengos.proveedros,
             devengos.fecha,
             devengos.descripcion,
             FORMAT(devengos.monto, 3) AS monto_formato,
@@ -29,7 +28,8 @@ try {
                     )
                 ) AS saldoDis,
                     usuarios.nombre AS usuario,
-                    unidades.nombre AS unidad
+                    unidades.nombre AS unidad,
+                    contratos.proveedor AS proveedor
                 FROM devengos
                     JOIN contratos ON devengos.contratoID = contratos.id
                     JOIN usuarios ON devengos.usuarioID = usuarios.id
@@ -39,7 +39,6 @@ try {
         $stmt = $conexion->prepare(
             "SELECT
             devengos.id,
-            devengos.proveedros,
             devengos.fecha,
             devengos.descripcion,
             FORMAT(devengos.monto, 3) AS monto_formato,
@@ -57,6 +56,7 @@ try {
             ) AS saldoDis,
                 usuarios.nombre AS usuario,
                 unidades.nombre AS unidad
+                contratos.proveedor AS proveedor
             FROM devengos
                 JOIN contratos ON devengos.contratoID = contratos.id
                 JOIN usuarios ON devengos.usuarioID = usuarios.id

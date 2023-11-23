@@ -7,7 +7,7 @@
     <div class="container">
         <div class="col">
             <form id="formEdit" method="post">
-                <div class="form-floating mb-3">
+                <div class="form-floating mb-3" hidden>
                     <input type="text" id="idEdit" data-id=show class="form-control" value="" disabled>
                     <label for="idEdit" style="color: gray">ID</label>
                 </div>
@@ -18,6 +18,10 @@
                 <div class="form-floating mb-3">
                     <input type="text" id="desEdit" class="form-control">
                     <label for="desEdit" style="color: gray">Descripcion</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" id="provEdit" class="form-control">
+                    <label for="provEdit" style="color: gray">Proveedor</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text" id="maxEdit" class="form-control">

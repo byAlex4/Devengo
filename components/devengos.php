@@ -3,6 +3,7 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 ?>
+<script>document.title = "Devengos | Devengo";</script>
 <main class="bodymain">
     <div class="mt-3">
         <h1>Página de devengos</h1>
@@ -91,7 +92,7 @@ error_reporting(E_ALL);
                     // Creamos una fila con los datos de cada usuario
                     var fila = "<tr>" +
                         "<td>" + item.id + "</td>" +
-                        "<td>" + item.proveedros + "</td>" +
+                        "<td>" + item.proveedor + "</td>" +
                         "<td>" + item.fecha + "</td>" +
                         "<td>" + item.descripcion + "</td>" +
                         "<td>" + item.monto_formato + "</td>" +
@@ -201,7 +202,7 @@ error_reporting(E_ALL);
                 console.log(data);
                 Swal.fire({
                     title: '¡Hecho!',
-                    text: 'El usuario ha sido creado',
+                    text: 'El devengo ha sido creado',
                     icon: 'success'
                 });
                 var table = $('#tablaDevengos');
