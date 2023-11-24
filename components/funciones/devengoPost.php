@@ -9,13 +9,15 @@ if (
     || isset($_POST['bscUnidad'])
     || isset($_POST['bscFecha'])
 ) {
-    $consultaSQL = "SELECT devengos.id, devengos.proveedros, devengos.fecha, devengos.descripcion, devengos.monto, 
+    $consultaSQL = "SELECT devengos.id, devengos.fecha, devengos.descripcion, devengos.monto, 
     devengos.created_at, devengos.updated_at, 
     contratos.clave AS contrato, 
     contratos.mont_max AS saldo,
+    contratos.proveedor AS proveedor,
     (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldoDis, 
     usuarios.nombre AS usuario, 
-    unidades.nombre AS unidad 
+    unidades.nombre AS unidad,
+    contratos.proveedor AS proveedor
     FROM devengos 
     JOIN contratos ON devengos.contratoID = contratos.id 
     JOIN usuarios ON devengos.usuarioID = usuarios.id 
@@ -40,16 +42,7 @@ if (
     $sentecia->execute();
 
     $resultados = $sentecia->fetchAll(PDO::FETCH_ASSOC);
-
-    // Comprobamos si hay resultados
-    if (count($resultados) > 0) {
-        // Devolvemos el resultado en formato JSON
-        echo json_encode($resultados);
-    } else {
-        // Mostramos un mensaje indicando que no hay resultados
-        echo json_encode(array("message" => "No se la unidad"));
-    }
-
+    echo json_encode($resultados);
 } else {
     if (isset($_POST['shw'])) {
         try {
@@ -268,8 +261,7 @@ if (
                 echo json_encode(array($response));
             } else {
                 if (
-                    isset($_POST['provedor'])
-                    && isset($_POST['fecha'])
+                    isset($_POST['fecha'])
                     && isset($_POST['monto'])
                     && isset($_POST['usuario'])
                     && isset($_POST['descripcion'])
@@ -277,15 +269,14 @@ if (
                 ) {
                     try {
                         $devengo = array(
-                            'proveedros' => $_POST['provedor'],
                             'fecha' => $_POST['fecha'],
-                            'monto' => $_POST['monto'],
                             'descripcion' => $_POST['descripcion'],
+                            'monto' => $_POST['monto'],
                             'usuarioID' => $_POST['usuario'],
                             'contratoID' => $_POST['clave']
                         );
 
-                        $consultaCrear = "INSERT INTO devengos (proveedros, fecha, monto, descripcion, usuarioID, contratoID)";
+                        $consultaCrear = "INSERT INTO devengos (fecha, descripcion, monto , usuarioID, contratoID)";
                         $consultaCrear .= "VALUES (:" . implode(", :", array_keys($devengo)) . ")";
                         $sentenciaCrear = $conexion->prepare($consultaCrear);
                         $sentenciaCrear->execute($devengo); // Aquí pasamos el arreglo como parámetro

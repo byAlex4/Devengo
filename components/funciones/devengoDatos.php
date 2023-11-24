@@ -52,15 +52,15 @@ try {
                     FROM devengos
                     WHERE
                         contratoID = contratos.id
-                )
-            ) AS saldoDis,
-                usuarios.nombre AS usuario,
-                unidades.nombre AS unidad
-                contratos.proveedor AS proveedor
-            FROM devengos
-                JOIN contratos ON devengos.contratoID = contratos.id
-                JOIN usuarios ON devengos.usuarioID = usuarios.id
-                JOIN unidades ON usuarios.unidadID = unidades.id
+                    )
+                ) AS saldoDis,
+                    usuarios.nombre AS usuario,
+                    unidades.nombre AS unidad,
+                    contratos.proveedor AS proveedor
+                FROM devengos
+                    JOIN contratos ON devengos.contratoID = contratos.id
+                    JOIN usuarios ON devengos.usuarioID = usuarios.id
+                    JOIN unidades ON usuarios.unidadID = unidades.id
             WHERE unidades.nombre = '" . $_SESSION['unidad'] . "';"
         );
     }
@@ -69,17 +69,8 @@ try {
     $stmt->execute();
     // Obtenemos el resultado como un array de arrays asociativos
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    //echo json_encode($stmt);
-
-    // Comprobamos si hay resultados
-    if (count($resultados) > 0) {
-        // Devolvemos el resultado en formato JSON
-        echo json_encode($resultados);
-    } else {
-        // Mostramos un mensaje indicando que no hay resultados
-        echo json_encode(array("message" => "No se encontraron usuarios"));
-    }
+    // Devolvemos el resultado en formato JSON
+    echo json_encode($resultados);
 } catch (PDOException $e) {
     // Mostramos un mensaje de error genérico
     echo json_encode(array("error" => "Ocurrió un error al obtener los datos"));

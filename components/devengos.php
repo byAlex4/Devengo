@@ -88,26 +88,35 @@ error_reporting(E_ALL);
             type: "GET",
             dataType: "JSON",
             success: function (data) {
-                $.each(data, function (i, item) {
-                    // Creamos una fila con los datos de cada usuario
+                if (data.length <= 0) {
                     var fila = "<tr>" +
-                        "<td>" + item.id + "</td>" +
-                        "<td>" + item.proveedor + "</td>" +
-                        "<td>" + item.fecha + "</td>" +
-                        "<td>" + item.descripcion + "</td>" +
-                        "<td>" + item.monto_formato + "</td>" +
-                        "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
-                        "<td>" + item.saldo + "</td>" +
-                        "<td>" + item.saldoDis + "</td>" +
-                        "<td>" + item.unidad + "</td>" +
-                        "<td>" + item.created_at + "</td>" +
-                        "<td>" + item.updated_at + "</td>" +
-                        "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                        "<td colspan='11'>No se encontraron devengos</td>" +
                         "</tr>";
-                    $(".DatosDevengo").append(fila);
-                });
-                var table = $('#DatosDevengo');
-                table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                    $("tbody").append(fila);
+                    var table = $('#DatosDevengo');
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                } else {
+                    $.each(data, function (i, item) {
+                        // Creamos una fila con los datos de cada usuario
+                        var fila = "<tr>" +
+                            "<td>" + item.id + "</td>" +
+                            "<td>" + item.proveedor + "</td>" +
+                            "<td>" + item.fecha + "</td>" +
+                            "<td>" + item.descripcion + "</td>" +
+                            "<td>" + item.monto_formato + "</td>" +
+                            "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
+                            "<td>" + item.saldo + "</td>" +
+                            "<td>" + item.saldoDis + "</td>" +
+                            "<td>" + item.unidad + "</td>" +
+                            "<td>" + item.created_at + "</td>" +
+                            "<td>" + item.updated_at + "</td>" +
+                            "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                            "</tr>";
+                        $(".DatosDevengo").append(fila);
+                    });
+                    var table = $('#DatosDevengo');
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                }
             }
         });
     }
@@ -148,25 +157,43 @@ error_reporting(E_ALL);
                 var table = $('#DatosDevengo');
                 $("tbody").empty();
                 table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
-                $.each(data, function (i, item) {
-                    //Creamos una fila con los datos de cada usuario
+                if (data.length <= 0) {
+                    $("tbody").empty();
                     var fila = "<tr>" +
-                        "<td>" + item.id + "</td>" +
-                        "<td>" + item.proveedros + "</td>" +
-                        "<td>" + item.fecha + "</td>" +
-                        "<td>" + item.descripcion + "</td>" +
-                        "<td>" + item.monto + "</td>" +
-                        "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
-                        "<td>" + item.saldo + "</td>" +
-                        "<td>" + item.saldoDis + "</td>" +
-                        "<td>" + item.unidad + "</td>" +
-                        "<td>" + item.created_at + "</td>" +
-                        "<td>" + item.updated_at + "</td>" +
-                        "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                        "<td colspan='11'>No se encontraron devengos</td>" +
                         "</tr>";
-                    $(".DatosDevengo").append(fila);
-                });
-                table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                    $("tbody").append(fila);
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                } else {
+                    $.each(data, function (i, item) {
+                        //Creamos una fila con los datos de cada usuario
+                        var fila = "<tr>" +
+                            "<td>" + item.id + "</td>" +
+                            "<td>" + item.proveedor + "</td>" +
+                            "<td>" + item.fecha + "</td>" +
+                            "<td>" + item.descripcion + "</td>" +
+                            "<td>" + item.monto + "</td>" +
+                            "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
+                            "<td>" + item.saldo + "</td>" +
+                            "<td>" + item.saldoDis + "</td>" +
+                            "<td>" + item.unidad + "</td>" +
+                            "<td>" + item.created_at + "</td>" +
+                            "<td>" + item.updated_at + "</td>" +
+                            "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                            "</tr>";
+                        $(".DatosDevengo").append(fila);
+                    });
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Algo no salio bien, vuelve a intentar',
+                    icon: 'error',
+                    confirmButtonText: 'Cerrar'
+                })
             }
         })
     });
@@ -176,26 +203,47 @@ error_reporting(E_ALL);
         cargarDatos();
     });
 
-    //Funcion de crear usuario
+    //Funcion de crear devengo
     $(document).on('click', '.crear', function (e) {
         e.preventDefault();
-        var provedor = $('#proveedorCrear').val();
         var fecha = $('#fechaCrear').val();
-        var descripcion = $('#descCrear').val();
-        var monto = $('#montoCrear').val();
-        var usuario = $('#usuarioCrear').val();
         var clave = $('#contratoCrear').val();
-        console.log(provedor, fecha, monto, descripcion, usuario, clave);
+        var monto = $('#montoCrear').val();
+        var descripcion = $('#descCrear').val();
+        var usuario = '<?php echo $_SESSION['id'] ?>';
+        monto = parseFloat(monto);
+        var objfecha = new Date(fecha);
+        if (clave == "" || descripcion == "" || isNaN(monto) || usuario == "" || isNaN(objfecha.getTime())) {
+            Swal.fire({
+                title: 'Advertecia!',
+                text: 'Favor de llenar todos los campos',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            // Cancelar el envío de la solicitud
+            return;
+        }
+        var now = new Date;
+        if (objfecha <= now) {
+            Swal.fire({
+                title: 'Advertecia!',
+                text: 'La fecha no puede ser anterior a la fecha actual',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            // Cancelar el envío de la solicitud
+            return;
+        }
+
         $.ajax({
             url: 'funciones/devengoPost.php',
             type: 'POST',
             data: {
-                'provedor': provedor,
                 'fecha': fecha,
+                'clave': clave,
                 'monto': monto,
                 'descripcion': descripcion,
-                'usuario': usuario,
-                'clave': clave
+                'usuario': usuario
             },
             dataType: 'JSON',
             success: function (data) {
@@ -208,11 +256,9 @@ error_reporting(E_ALL);
                 var table = $('#tablaDevengos');
                 table.animate({ opacity: '0', marginTop: '15%' }, "slow");
                 cargarDatos();
-                $('#proveedorCrear').val("");
                 $('#fechaCrear').val("");
                 $('#descCrear').val("");
                 $('#montoCrear').val("");
-                $('#usuarioCrear').val(0);
                 $('#contratoCrear').val(0);
             },
             error: function (data) {

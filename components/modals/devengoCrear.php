@@ -14,10 +14,6 @@
                         <label for="fechaCrear" style="color: gray">Fecha de cargo</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="txt" id="proveedorCrear" class="form-control">
-                        <label for="proveedorCrear" style="color: gray">Proveedor</label>
-                    </div>
-                    <div class="form-floating mb-3">
                         <select class="form-select" id="contratoCrear" aria-label="Floating label select example">
                             <option value="0" selected>Selecciona el contrato</option>
                             <?php
@@ -40,22 +36,6 @@
                     <div class="form-floating mb-3">
                         <input type="txt" id="descCrear" class="form-control">
                         <label for="descCrear" style="color: gray">Descripcion</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <select class="form-select" id="usuarioCrear" aria-label="Floating label select example">
-                            <option value="0" selected>Selecciona al usuario</option>
-                            <?php
-                            $consultaUsuario = "SELECT id, nombre FROM usuarios";
-                            $sentenciaUsuario = $conexion->prepare($consultaUsuario);
-                            $sentenciaUsuario->execute();
-                            foreach ($sentenciaUsuario as $user) { ?>
-                                <option value="<?php echo ($user["id"]); ?>">
-                                    <?php echo ($user["nombre"]); ?>
-                                </option>
-                                <?php
-                            } ?>
-                        </select>
-                        <label for="usuarioCrear">Usuario registrado</label>
                     </div>
                     <div class="modal-footer">
                         <div class="form-group">

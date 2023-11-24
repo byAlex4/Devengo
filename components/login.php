@@ -76,7 +76,7 @@
                   } else {
                     // Preparar la consulta SQL
                     $stmt = $conexion->prepare(
-                      "SELECT usuarios.matricula, usuarios.nombre, unidades.nombre AS unidad, roles.nombre AS rol, usuarios.contra 
+                      "SELECT usuarios.id, usuarios.matricula, usuarios.nombre, unidades.nombre AS unidad, roles.nombre AS rol, usuarios.contra 
                       FROM usuarios  
                       JOIN unidades ON usuarios.unidadID = unidades.id 
                       JOIN roles ON usuarios.rolID = roles.id
@@ -88,6 +88,7 @@
                       // Verificar si la contraseña es correcta
                       if ($user && password_verify($pass, $user['contra'])) {
                         session_start();
+                        $_SESSION['id'] = $user['id'];
                         $_SESSION['matricula'] = $user['matricula'];
                         $_SESSION['nombre'] = $user['nombre'];
                         $_SESSION['unidad'] = $user['unidad'];
