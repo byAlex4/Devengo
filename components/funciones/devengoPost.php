@@ -80,8 +80,13 @@ if (
             try {
                 // Obtener el valor de 'id' del cuerpo de la solicitud POST
                 $id = $_POST['contr'];
-                $consulta = "SELECT contratos.clave, contratos.descripcion, contratos.mont_max, contratos.mont_min,
-                contratos.fecha_in, contratos.fecha_fin ,
+                $consulta = "SELECT 
+                contratos.clave, 
+                contratos.descripcion, 
+                contratos.mont_max, 
+                contratos.mont_min,         
+                DATE_FORMAT( contratos.fecha_in, '%d-%M-%Y') AS fecha_in,
+                DATE_FORMAT( contratos.fecha_fin, '%d-%M-%Y') AS fecha_fin,
                 (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldoDis 
                 FROM contratos WHERE contratos.id = $id";
 
@@ -98,22 +103,24 @@ if (
                     SUM(d.monto) AS monto,
                     MONTH(d.fecha) AS mes,
                     d.descripcion,
-                    SUM(d.monto) OVER (
-                        PARTITION BY u.unidadID
-                        ORDER BY
-                            month(d.fecha)
+                    (
+                        SELECT SUM(d2.monto)
+                        FROM devengos d2
+                        JOIN usuarios u2 ON d2.usuarioID = u2.id
+                        WHERE u2.unidadID = u.unidadID AND MONTH(d2.fecha) <= MONTH(d.fecha)
                     ) AS acumulado,
                     un.nombre AS unidad
-                FROM devengos d
-                    JOIN usuarios u ON d.usuarioID = u.id
-                    JOIN unidades un ON u.unidadID = un.id
+                FROM
+                    devengos d
+                JOIN usuarios u ON d.usuarioID = u.id
+                JOIN unidades un ON u.unidadID = un.id
                 WHERE `contratoID` = $id
                 GROUP BY
-                    month(d.fecha),
+                    MONTH(d.fecha),
                     u.unidadID,
-                    d.descripcion -- agregar la descripción al GROUP BY
+                    d.descripcion
                 ORDER BY
-                    month(d.fecha) ASC,
+                    MONTH(d.fecha) ASC,
                     u.unidadID ASC;";
 
                 $sentencia = $conexion->prepare($consultaSQL);
@@ -156,7 +163,7 @@ if (
 
             $html = "
             <div class='row'>
-                        <div class='col-9'>
+                        <div class='col-6'>
                             <ul class='list-unstyled'>
                                 <li class='h4 text-black mt-1'>Contrato:</li>
                                 <li class='h4 text-black mt-1'>Fecha de inicio:</li>
@@ -165,7 +172,7 @@ if (
                                 <li class='h4 text-black mt-1'>Monto minimo:</li>
                             </ul>
                         </div>
-                        <div class='col-3' style='text-align: right;'>
+                        <div class='col-5' style='text-align: right;'>
                             <ul class='list-unstyled'>
                                 <li class='h4 text-muted mt-1'>" . $contrato['clave'] . "</li>
                                 <li class='h4 text-muted mt-1 '>" . $contrato['fecha_in'] . "</li>
