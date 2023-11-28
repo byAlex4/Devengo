@@ -104,10 +104,11 @@
                 <?php echo $_SESSION['rol']; ?>
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="">
-                <li><a class="dropdown-item" href="#">
+                <li>
+                  <p class="dropdown-item">
                     <?php echo $_SESSION['nombre']; ?>
-                  </a></li>
-                <li><a class="dropdown-item" href="#">Cambiar a usuario</a></li>
+                  </p>
+                </li>
                 <li>
                   <form method="post">
                     <button class="dropdown-item" type="submit" name="cerrar_sesion">

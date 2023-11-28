@@ -6,7 +6,10 @@ if (
     isset($_POST['bscNombre'])
     || isset($_POST['bscClave'])
 ) {
-    $consultaSQL = "SELECT * FROM unidades ";
+    $consultaSQL = "SELECT id, nombre, descripcion, 
+    DATE_FORMAT( created_at, '%d-%M-%Y') AS created_at,
+    DATE_FORMAT( updated_at, '%d-%M-%Y') AS updated_at 
+    FROM unidades ";
     if (!empty($_POST['bscClave'])) {
         $consultaSQL .= "WHERE nombre LIKE '%" . $_POST['bscClave'] . "%'";
     }
@@ -18,16 +21,7 @@ if (
     $sentecia->execute();
 
     $resultados = $sentecia->fetchAll(PDO::FETCH_ASSOC);
-
-    // Comprobamos si hay resultados
-    if (count($resultados) > 0) {
-        // Devolvemos el resultado en formato JSON
-        echo json_encode($resultados);
-    } else {
-        // Mostramos un mensaje indicando que no hay resultados
-        echo json_encode(array("message" => "No se la unidad"));
-    }
-
+    echo json_encode($resultados);
 } else {
     if (isset($_POST['shw'])) {
         try {

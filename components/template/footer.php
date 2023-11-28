@@ -10,11 +10,6 @@
                         <img src="img/imsslogo-recort.png" width="75px" height="25px" alt="logoNav" class="d-block my-1"
                                 fill="currentColor" />
                 </a>
-                <ul class="nav col-md-5 h-75 justify-content-end">
-                        <li class="nav-item "><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
-                </ul>
         </div>
 </footer>
 </body>

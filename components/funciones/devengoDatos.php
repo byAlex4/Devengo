@@ -12,11 +12,11 @@ try {
         $stmt = $conexion->prepare(
             "SELECT
             devengos.id,
-            devengos.fecha,
+            DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
             devengos.descripcion,
             FORMAT(devengos.monto, 3) AS monto_formato,
-            devengos.created_at,
-            devengos.updated_at,
+            DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
+            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
             devengos.contratoID AS contratoID,
             contratos.clave AS contrato,
             FORMAT(contratos.mont_max, 3) AS saldo, (
@@ -39,11 +39,11 @@ try {
         $stmt = $conexion->prepare(
             "SELECT
             devengos.id,
-            devengos.fecha,
+            DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
             devengos.descripcion,
             FORMAT(devengos.monto, 3) AS monto_formato,
-            devengos.created_at,
-            devengos.updated_at,
+            DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
+            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
             devengos.contratoID AS contratoID,
             contratos.clave AS contrato,
             FORMAT(contratos.mont_max, 3) AS saldo, (

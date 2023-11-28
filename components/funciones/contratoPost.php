@@ -9,7 +9,18 @@ if (
     || isset($_POST['bscFecha'])
     || isset($_POST['bscProveedor'])
 ) {
-    $consultaSQL = "SELECT * FROM contratos ";
+    $consultaSQL = "SELECT 
+    id, 
+    proveedor, 
+    clave, 
+    descripcion, 
+    mont_max, 
+    mont_min, 
+    DATE_FORMAT( fecha_in, '%d-%M-%Y') AS fecha_in,
+    DATE_FORMAT( fecha_fin, '%d-%M-%Y') AS fecha_fin, 
+    DATE_FORMAT( created_at, '%d-%M-%Y') AS created_at, 
+    DATE_FORMAT( updated_at, '%d-%M-%Y') AS updated_at
+    FROM contratos ";
     if (!empty($_POST['bscClave'])) {
         $consultaSQL .= "WHERE clave LIKE '%" . $_POST['bscClave'] . "%'";
     }

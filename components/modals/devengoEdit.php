@@ -14,10 +14,6 @@
                             disabled>
                         <label for="idEdit" style="color: gray">ID</label>
                     </div>
-                     <div class="form-floating mb-3">
-                        <input type="txt" id="proveedorEdit" class="form-control">
-                        <label for="proveedorEdit" style="color: gray">Proveedor</label>
-                    </div>
                     <div class="form-floating mb-3">
                         <input type="date" id="fechaEdit" class="form-control">
                         <label for="fechaCrear" style="color: gray">Fecha de cargo</label>
@@ -45,22 +41,6 @@
                     <div class="form-floating mb-3">
                         <input type="txt" id="descEdit" class="form-control">
                         <label for="descEdit" style="color: gray">Descripcion</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <select class="form-select" id="usuarioEdit" aria-label="Floating label select example">
-                            <option selected>Selecciona al usuario</option>
-                            <?php
-                            $consultaUsuario = "SELECT id, nombre FROM usuarios";
-                            $sentenciaUsuario = $conexion->prepare($consultaUsuario);
-                            $sentenciaUsuario->execute();
-                            foreach ($sentenciaUsuario as $user) { ?>
-                                <option value="<?php echo ($user["id"]); ?>">
-                                    <?php echo ($user["nombre"]); ?>
-                                </option>
-                                <?php
-                            } ?>
-                        </select>
-                        <label for="usuarioEdit">Usuario registrado</label>
                     </div>
                     <div class="modal-footer">
                         <div class="form-group">

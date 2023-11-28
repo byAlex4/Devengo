@@ -5,22 +5,16 @@ try {
     include '../../config.php';
 
     // Preparamos la consulta SQL para obtener los datos de los usuarios, sus unidades y sus roles
-    $stmt = $conexion->prepare('SELECT * FROM unidades');
-
+    $stmt = $conexion->prepare("SELECT id, nombre, descripcion, 
+    DATE_FORMAT( created_at, '%d-%M-%Y') AS created_at,
+    DATE_FORMAT( updated_at, '%d-%M-%Y') AS updated_at 
+    FROM unidades");
 
     // Ejecutamos la consulta SQL sin parámetros
     $stmt->execute();
     // Obtenemos el resultado como un array de arrays asociativos
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Comprobamos si hay resultados
-    if (count($resultados) > 0) {
-        // Devolvemos el resultado en formato JSON
-        echo json_encode($resultados);
-    } else {
-        // Mostramos un mensaje indicando que no hay resultados
-        echo json_encode(array("message" => "No se encontraron usuarios"));
-    }
+    echo json_encode($resultados);
 } catch (PDOException $e) {
     // Mostramos un mensaje de error genérico
     echo json_encode(array("error" => "Ocurrió un error al obtener los datos"));

@@ -285,13 +285,11 @@ error_reporting(E_ALL);
             success: function (data) {
                 console.log(data);
                 $('#formEdit').val(data.id);
-                $('#proveedorEdit').val(data.provedor);
                 $('#idEdit').val(data.id);
                 $('#fechaEdit').val(data.fecha);
                 $('#contratoEdit').val(data.clave);
                 $('#montoEdit').val(data.monto);
                 $('#descEdit').val(data.desc);
-                $('#usuarioEdit').val(data.usuario);
             }
         })
     });
@@ -316,19 +314,17 @@ error_reporting(E_ALL);
     $(document).on('click', '.editar', function (e) {
         e.preventDefault();
         var id = $('#idEdit').val();
-        var provedor = $('#proveedorEdit').val();
         var fecha = $('#fechaEdit').val();
         var descripcion = $('#descEdit').val();
         var clave = $('#contratoEdit').val();
         var monto = $('#montoEdit').val();
-        var usuario = $('#usuarioEdit').val();
-        console.log(id, provedor, fecha, monto, usuario, clave);
+        var usuario = '<?php echo $_SESSION['id'] ?>';
+        console.log(id, fecha, monto, usuario, clave);
         $.ajax({
             url: 'funciones/devengoPost.php',
             type: 'POST',
             data: {
                 'editar': id,
-                'provedor': provedor,
                 'fecha': fecha,
                 'descripcion': descripcion,
                 'clave': clave,

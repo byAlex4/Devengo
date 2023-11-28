@@ -9,8 +9,12 @@ if (
     || isset($_POST['bscRol'])
 ) {
     $consultaSQL = "SELECT usuarios.id, usuarios.matricula, 
-    usuarios.nombre, usuarios.created_at, usuarios.updated_at, unidades.nombre 
-    AS unidad, roles.nombre AS rol, usuarios.contra 
+    usuarios.nombre, 
+    DATE_FORMAT( usuarios.created_at, '%d-%M-%Y') AS created_at,
+    DATE_FORMAT( usuarios.updated_at, '%d-%M-%Y') AS updated_at,
+    unidades.nombre AS unidad, 
+    roles.nombre AS rol, 
+    usuarios.contra 
     FROM usuarios 
     JOIN unidades ON usuarios.unidadID = unidades.id 
     JOIN roles ON usuarios.rolID = roles.id ";
