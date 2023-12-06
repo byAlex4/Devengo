@@ -14,53 +14,42 @@ try {
             devengos.id,
             DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
             devengos.descripcion,
-            FORMAT(devengos.monto, 3) AS monto_formato,
+            FORMAT(devengos.monto, 3, 'es-MX') AS monto_formato,
             DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
             DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
             devengos.contratoID AS contratoID,
             contratos.clave AS contrato,
-            FORMAT(contratos.mont_max, 3) AS saldo, (
-                contratos.mont_max - (
-                    SELECT SUM(monto)
-                    FROM devengos
-                    WHERE
-                        contratoID = contratos.id
-                    )
-                ) AS saldoDis,
-                    usuarios.nombre AS usuario,
-                    unidades.nombre AS unidad,
-                    contratos.proveedor AS proveedor
-                FROM devengos
-                    JOIN contratos ON devengos.contratoID = contratos.id
-                    JOIN usuarios ON devengos.usuarioID = usuarios.id
-                    JOIN unidades ON usuarios.unidadID = unidades.id"
-        );
+            FORMAT(contratos.mont_max, 3, 'es-MX') AS saldo, 
+            FORMAT((contratos.mont_max - (SELECT SUM(monto)FROM devengos
+            WHERE contratoID = contratos.id)),3, 'es-MX') AS saldoDis,
+                usuarios.nombre AS usuario,
+                unidades.nombre AS unidad,
+                contratos.proveedor AS proveedor
+            FROM devengos
+                JOIN contratos ON devengos.contratoID = contratos.id
+                JOIN usuarios ON devengos.usuarioID = usuarios.id
+                JOIN unidades ON usuarios.unidadID = unidades.id");
     } else {
         $stmt = $conexion->prepare(
             "SELECT
             devengos.id,
             DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
             devengos.descripcion,
-            FORMAT(devengos.monto, 3) AS monto_formato,
+            FORMAT(devengos.monto, 3, 'es-MX') AS monto_formato,
             DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
             DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
             devengos.contratoID AS contratoID,
             contratos.clave AS contrato,
-            FORMAT(contratos.mont_max, 3) AS saldo, (
-                contratos.mont_max - (
-                    SELECT SUM(monto)
-                    FROM devengos
-                    WHERE
-                        contratoID = contratos.id
-                    )
-                ) AS saldoDis,
-                    usuarios.nombre AS usuario,
-                    unidades.nombre AS unidad,
-                    contratos.proveedor AS proveedor
-                FROM devengos
-                    JOIN contratos ON devengos.contratoID = contratos.id
-                    JOIN usuarios ON devengos.usuarioID = usuarios.id
-                    JOIN unidades ON usuarios.unidadID = unidades.id
+            FORMAT(contratos.mont_max, 3, 'es-MX') AS saldo, 
+            FORMAT((contratos.mont_max - (SELECT SUM(monto)FROM devengos
+            WHERE contratoID = contratos.id)),3, 'es-MX') AS saldoDis,
+                usuarios.nombre AS usuario,
+                unidades.nombre AS unidad,
+                contratos.proveedor AS proveedor
+            FROM devengos
+                JOIN contratos ON devengos.contratoID = contratos.id
+                JOIN usuarios ON devengos.usuarioID = usuarios.id
+                JOIN unidades ON usuarios.unidadID = unidades.id
             WHERE unidades.nombre = '" . $_SESSION['unidad'] . "';"
         );
     }

@@ -103,10 +103,10 @@ error_reporting(E_ALL);
                             "<td>" + item.proveedor + "</td>" +
                             "<td>" + item.fecha + "</td>" +
                             "<td>" + item.descripcion + "</td>" +
-                            "<td>" + item.monto_formato + "</td>" +
+                            "<td>$" + item.monto_formato + "</td>" +
                             "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
-                            "<td>" + item.saldo + "</td>" +
-                            "<td>" + item.saldoDis + "</td>" +
+                            "<td>$" + item.saldo + "</td>" +
+                            "<td>$" + item.saldoDis + "</td>" +
                             "<td>" + item.unidad + "</td>" +
                             "<td>" + item.created_at + "</td>" +
                             "<td>" + item.updated_at + "</td>" +
@@ -172,10 +172,10 @@ error_reporting(E_ALL);
                             "<td>" + item.proveedor + "</td>" +
                             "<td>" + item.fecha + "</td>" +
                             "<td>" + item.descripcion + "</td>" +
-                            "<td>" + item.monto + "</td>" +
+                            "<td>$" + item.monto + "</td>" +
                             "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
-                            "<td>" + item.saldo + "</td>" +
-                            "<td>" + item.saldoDis + "</td>" +
+                            "<td>$" + item.saldo + "</td>" +
+                            "<td>$" + item.saldoDis + "</td>" +
                             "<td>" + item.unidad + "</td>" +
                             "<td>" + item.created_at + "</td>" +
                             "<td>" + item.updated_at + "</td>" +
@@ -224,17 +224,16 @@ error_reporting(E_ALL);
             return;
         }
         var now = new Date;
-        if (objfecha <= now) {
+        if (objfecha > now) {
             Swal.fire({
                 title: 'Advertecia!',
-                text: 'La fecha no puede ser anterior a la fecha actual',
+                text: 'La fecha no puede ser superior a la fecha actual',
                 icon: 'warning',
                 confirmButtonText: 'Cerrar'
             });
             // Cancelar el envío de la solicitud
             return;
         }
-
         $.ajax({
             url: 'funciones/devengoPost.php',
             type: 'POST',
@@ -247,14 +246,15 @@ error_reporting(E_ALL);
             },
             dataType: 'JSON',
             success: function (data) {
+                var table = $('#DatosDevengo');
+                table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
                 console.log(data);
                 Swal.fire({
                     title: '¡Hecho!',
                     text: 'El devengo ha sido creado',
                     icon: 'success'
                 });
-                var table = $('#tablaDevengos');
-                table.animate({ opacity: '0', marginTop: '15%' }, "slow");
+                table.animate({ opacity: '1', marginTop: '0' }, "slow");
                 cargarDatos();
                 $('#fechaCrear').val("");
                 $('#descCrear').val("");
@@ -301,7 +301,6 @@ error_reporting(E_ALL);
             url: 'funciones/devengoPost.php',
             type: 'POST',
             data: { 'contr': id },
-            //dataType: 'JSON',
             success: function (data) {
                 $('#contratoMostrar').html(data);
             },
@@ -320,6 +319,18 @@ error_reporting(E_ALL);
         var monto = $('#montoEdit').val();
         var usuario = '<?php echo $_SESSION['id'] ?>';
         console.log(id, fecha, monto, usuario, clave);
+        var objfecha = new Date(fecha);
+        var now = new Date;
+        if (objfecha > now) {
+            Swal.fire({
+                title: 'Advertecia!',
+                text: 'La fecha no puede ser superior a la fecha actual',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            // Cancelar el envío de la solicitud
+            return;
+        }
         $.ajax({
             url: 'funciones/devengoPost.php',
             type: 'POST',
@@ -333,14 +344,15 @@ error_reporting(E_ALL);
             },
             dataType: 'JSON',
             success: function (data) {
+                var table = $('#DatosDevengo');
+                table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
                 console.log(data);
                 Swal.fire({
                     title: '¡Hecho!',
                     text: 'Los cambios han sido guardados',
                     icon: 'success'
                 });
-                var table = $('#tablaDevengos');
-                table.animate({ opacity: '0', marginTop: '15%' }, "slow");
+                table.animate({ opacity: '1', marginTop: '0' }, "slow");
                 cargarDatos();
             },
             error: function (data) {

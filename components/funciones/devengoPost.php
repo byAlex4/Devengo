@@ -9,37 +9,67 @@ if (
     || isset($_POST['bscUnidad'])
     || isset($_POST['bscFecha'])
 ) {
-    $consultaSQL = "SELECT devengos.id, 
-    DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
-    devengos.descripcion, 
-    devengos.monto, 
-    DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
-            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
-    contratos.clave AS contrato, 
-    contratos.mont_max AS saldo,
-    contratos.proveedor AS proveedor,
-    (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldoDis, 
-    usuarios.nombre AS usuario, 
-    unidades.nombre AS unidad,
-    contratos.proveedor AS proveedor
-    FROM devengos 
-    JOIN contratos ON devengos.contratoID = contratos.id 
-    JOIN usuarios ON devengos.usuarioID = usuarios.id 
-    JOIN unidades ON usuarios.unidadID = unidades.id ";
+    // Iniciar la sesión
+    session_start();
+    $unidad = $_SESSION['unidad'];
+
+    // Preparamos la consulta SQL para obtener los datos de los usuarios, sus unidades y sus roles
+    if ($_SESSION['rol'] == "Administrador") {
+        $consultaSQL =
+            "SELECT devengos.id, 
+        DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
+        devengos.descripcion, 
+        FORMAT(devengos.monto, 3, 'es-MX') AS monto, 
+        DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
+                DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
+        devengos.contratoID AS contratoID,
+        contratos.clave AS contrato, 
+        FORMAT(contratos.mont_max, 3, 'es-MX') AS saldo,
+        contratos.proveedor AS proveedor,
+        FORMAT((contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)), 3, 'es-MX') AS saldoDis, 
+        usuarios.nombre AS usuario, 
+        unidades.nombre AS unidad,
+        contratos.proveedor AS proveedor
+        FROM devengos 
+        JOIN contratos ON devengos.contratoID = contratos.id 
+        JOIN usuarios ON devengos.usuarioID = usuarios.id 
+        JOIN unidades ON usuarios.unidadID = unidades.id ";
+    } else {
+        $consultaSQL =
+            "SELECT devengos.id, 
+        DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
+        devengos.descripcion, 
+        FORMAT(devengos.monto, 3, 'es-MX') AS monto, 
+        DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
+                DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
+        devengos.contratoID AS contratoID,
+        contratos.clave AS contrato, 
+        FORMAT(contratos.mont_max, 3, 'es-MX') AS saldo,
+        contratos.proveedor AS proveedor,
+        FORMAT((contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)), 3, 'es-MX') AS saldoDis, 
+        usuarios.nombre AS usuario, 
+        unidades.nombre AS unidad,
+        contratos.proveedor AS proveedor
+        FROM devengos 
+        JOIN contratos ON devengos.contratoID = contratos.id 
+        JOIN usuarios ON devengos.usuarioID = usuarios.id 
+        JOIN unidades ON usuarios.unidadID = unidades.id 
+        WHERE unidades.nombre = '" . $_SESSION['unidad'] . "' ";
+    }
     if (!empty($_POST['bscDesc'])) {
-        $consultaSQL .= "WHERE devengos.descripcion LIKE '%" . $_POST['bscDesc'] . "%'";
+        $consultaSQL .= "AND devengos.descripcion LIKE '%" . $_POST['bscDesc'] . "%'";
     }
     if (!empty($_POST['bscMonto'])) {
-        $consultaSQL .= "WHERE devengos.monto >=" . $_POST['bscMonto'];
+        $consultaSQL .= "AND devengos.monto >=" . $_POST['bscMonto'];
     }
     if (!empty($_POST['bscContrato'])) {
-        $consultaSQL .= "WHERE contratos.clave LIKE'%" . $_POST['bscContrato'] . "%'";
+        $consultaSQL .= "AND contratos.clave LIKE'%" . $_POST['bscContrato'] . "%'";
     }
     if (!empty($_POST['bscUnidad'])) {
-        $consultaSQL .= "WHERE unidades.nombre LIKE'%" . $_POST['bscUnidad'] . "%'";
+        $consultaSQL .= "AND unidades.nombre LIKE'%" . $_POST['bscUnidad'] . "%'";
     }
     if (!empty($_POST['bscFecha'])) {
-        $consultaSQL .= "WHERE DATE_FORMAT(devengos.fecha, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
+        $consultaSQL .= "AND DATE_FORMAT(devengos.fecha, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
     }
 
     $sentecia = $conexion->prepare($consultaSQL);
@@ -80,8 +110,13 @@ if (
             try {
                 // Obtener el valor de 'id' del cuerpo de la solicitud POST
                 $id = $_POST['contr'];
-                $consulta = "SELECT contratos.clave, contratos.descripcion, contratos.mont_max, contratos.mont_min,
-                contratos.fecha_in, contratos.fecha_fin ,
+                $consulta = "SELECT 
+                contratos.clave, 
+                contratos.descripcion, 
+                contratos.mont_max, 
+                contratos.mont_min,         
+                DATE_FORMAT( contratos.fecha_in, '%d-%M-%Y') AS fecha_in,
+                DATE_FORMAT( contratos.fecha_fin, '%d-%M-%Y') AS fecha_fin,
                 (contratos.mont_max - (SELECT SUM(monto) FROM devengos WHERE contratoID = contratos.id)) AS saldoDis 
                 FROM contratos WHERE contratos.id = $id";
 
@@ -98,22 +133,24 @@ if (
                     SUM(d.monto) AS monto,
                     MONTH(d.fecha) AS mes,
                     d.descripcion,
-                    SUM(d.monto) OVER (
-                        PARTITION BY u.unidadID
-                        ORDER BY
-                            month(d.fecha)
+                    (
+                        SELECT SUM(d2.monto)
+                        FROM devengos d2
+                        JOIN usuarios u2 ON d2.usuarioID = u2.id
+                        WHERE u2.unidadID = u.unidadID AND MONTH(d2.fecha) <= MONTH(d.fecha)
                     ) AS acumulado,
                     un.nombre AS unidad
-                FROM devengos d
-                    JOIN usuarios u ON d.usuarioID = u.id
-                    JOIN unidades un ON u.unidadID = un.id
+                FROM
+                    devengos d
+                JOIN usuarios u ON d.usuarioID = u.id
+                JOIN unidades un ON u.unidadID = un.id
                 WHERE `contratoID` = $id
                 GROUP BY
-                    month(d.fecha),
+                    MONTH(d.fecha),
                     u.unidadID,
-                    d.descripcion -- agregar la descripción al GROUP BY
+                    d.descripcion
                 ORDER BY
-                    month(d.fecha) ASC,
+                    MONTH(d.fecha) ASC,
                     u.unidadID ASC;";
 
                 $sentencia = $conexion->prepare($consultaSQL);
@@ -156,7 +193,7 @@ if (
 
             $html = "
             <div class='row'>
-                        <div class='col-9'>
+                        <div class='col-6'>
                             <ul class='list-unstyled'>
                                 <li class='h4 text-black mt-1'>Contrato:</li>
                                 <li class='h4 text-black mt-1'>Fecha de inicio:</li>
@@ -165,13 +202,13 @@ if (
                                 <li class='h4 text-black mt-1'>Monto minimo:</li>
                             </ul>
                         </div>
-                        <div class='col-3' style='text-align: right;'>
+                        <div class='col-5' style='text-align: right;'>
                             <ul class='list-unstyled'>
                                 <li class='h4 text-muted mt-1'>" . $contrato['clave'] . "</li>
                                 <li class='h4 text-muted mt-1 '>" . $contrato['fecha_in'] . "</li>
                                 <li class='h4 text-muted mt-1 '>" . $contrato['fecha_fin'] . "</li>
-                                <li class='h4 text-muted mt-1 '>" . $contrato['mont_max'] . "</li>
-                                <li class='h4 text-muted mt-1 '>" . $contrato['mont_min'] . "</li>
+                                <li class='h4 text-muted mt-1 '>$ " . number_format($contrato['mont_max'], 3) . "</li>
+                                <li class='h4 text-muted mt-1 '>$ " . number_format($contrato['mont_min'], 3) . "</li>
                     
                             </ul>
                         </div>
@@ -209,11 +246,11 @@ if (
 
 
                     // Generar el código HTML de cada celda de la tabla con los datos encontrados
-                    $html .= "<tr><td>$unidad</td><td>$desc</td><td>$ $monto</td><td>$ $acumulado</td></tr>";
+                    $html .= "<tr><td>$unidad</td><td>$desc</td><td>$ " . number_format($monto, 3) . " </td><td>$ " . number_format($acumulado, 3) . "</td></tr>";
                     $total_mes += $monto;
                     $total_mes = number_format($total_mes, 3, '.', '');
                 }
-                $html .= "<tr><td class='h4' colspan='4'>Total del mes: <p class='text-muted float-end'>$ $total_mes</p></td></tr>";
+                $html .= "<tr><td class='h4' colspan='4'>Total del mes: <p class='text-muted float-end'>$ " . number_format($total_mes, 3) . "</p></td></tr>";
 
                 $total_contrato += $total_mes;
                 $total_contrato = number_format($total_contrato, 3, '.', '');
@@ -222,7 +259,7 @@ if (
                         </tbody>
                     </table>
                     </div>
-                    <h3>Total del contrato<p class='text-muted float-end'>$$total_contrato</p></h3>
+                    <h3>Total del contrato<p class='text-muted float-end'>$ " . number_format($total_contrato, 3) . "</p></h3>
                 </div>
             </div>";
             if ($contrato['saldoDis'] <= ($contrato['mont_max'] * 0.3)) {

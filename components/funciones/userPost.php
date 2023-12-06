@@ -8,44 +8,37 @@ if (
     || isset($_POST['bscMatricula'])
     || isset($_POST['bscRol'])
 ) {
-    $consultaSQL = "SELECT usuarios.id, usuarios.matricula, 
+    $consultaSQL = "SELECT usuarios.id, 
+    usuarios.matricula, 
     usuarios.nombre, 
     DATE_FORMAT( usuarios.created_at, '%d-%M-%Y') AS created_at,
     DATE_FORMAT( usuarios.updated_at, '%d-%M-%Y') AS updated_at,
     unidades.nombre AS unidad, 
-    roles.nombre AS rol, 
-    usuarios.contra 
+    FORMAT(devengos.monto, 3, 'es-MX') AS monto,
+    roles.nombre AS rol, usuarios.contra 
     FROM usuarios 
     JOIN unidades ON usuarios.unidadID = unidades.id 
-    JOIN roles ON usuarios.rolID = roles.id ";
+    JOIN roles ON usuarios.rolID = roles.id
+    JOIN devengos ON usuarios.id = devengos.usuarioID ";
 
     if (!empty($_POST['bscMatricula'])) {
-        $consultaSQL .= "WHERE matricula LIKE '%" . $_POST['bscMatricula'] . "%'";
+        $consultaSQL .= "WHERE matricula LIKE '%" . $_POST['bscMatricula'] . "%' GROUP BY id";
     }
     if (!empty($_POST['bscNombre'])) {
-        $consultaSQL .= "WHERE usuarios.nombre LIKE '%" . $_POST['bscNombre'] . "%'";
+        $consultaSQL .= "WHERE usuarios.nombre LIKE '%" . $_POST['bscNombre'] . "%' GROUP BY id";
     }
     if (!empty($_POST['bscRol'])) {
-        $consultaSQL .= "WHERE roles.nombre LIKE '%" . $_POST['bscRol'] . "%'";
+        $consultaSQL .= "WHERE roles.nombre LIKE '%" . $_POST['bscRol'] . "%' GROUP BY id";
     }
     if (!empty($_POST['bscUnidad'])) {
-        $consultaSQL .= "WHERE unidades.nombre LIKE '%" . $_POST['bscUnidad'] . "%'";
+        $consultaSQL .= "WHERE unidades.nombre LIKE '%" . $_POST['bscUnidad'] . "%' GROUP BY id";
     }
 
     $sentecia = $conexion->prepare($consultaSQL);
     $sentecia->execute();
 
     $resultados = $sentecia->fetchAll(PDO::FETCH_ASSOC);
-
-    // Comprobamos si hay resultados
-    if (count($resultados) > 0) {
-        // Devolvemos el resultado en formato JSON
-        echo json_encode($resultados);
-    } else {
-        // Mostramos un mensaje indicando que no hay resultados
-        echo json_encode(array("message" => "No se encontraron usuarios"));
-    }
-
+    echo json_encode($resultados);
 } else {
     if (isset($_POST['shw'])) {
         try {

@@ -111,24 +111,6 @@ VALUES ("OOAD", "OOAD AGUASCALIENTES"), (
     ), (
         "UMF12",
         "UNIDAD DE MEDICINA FAMILIAR 12"
-    ), (
-        "ABASTO",
-        "COORDINACION DE ABASTECIMIENTO"
-    ), (
-        "CSS",
-        "CENTRO DE SEGURIDAD SOCIAL"
-    ), (
-        "GUARDERIA",
-        "GUARDERIA ORDINARIA"
-    ), (
-        "CEDECAL",
-        "CENTRO DE CAPACITACION"
-    ), (
-        "SUBNTE",
-        "SUBDELEGACION METROPOLITANA NORTE"
-    ), (
-        "SUBSUR",
-        "SUBDELEGACION METROPOLITANA SUR"
     );
 
 INSERT INTO roles (nombre) VALUES ( "Administrador"), ( "Usuario");

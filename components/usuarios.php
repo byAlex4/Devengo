@@ -36,6 +36,7 @@ error_reporting(E_ALL);
                         <th>ID</th>
                         <th>Matricula</th>
                         <th>Nombre</th>
+                        <th>Monto</th>
                         <th>Unidad</th>
                         <th>Rol</th>
                         <th>Created</th>
@@ -84,6 +85,7 @@ error_reporting(E_ALL);
                         "<td>" + item.id + "</td>" +
                         "<td>" + item.matricula + "</td>" +
                         "<td>" + item.nombre + "</td>" +
+                        "<td>" + item.monto + "</td>" +
                         "<td>" + item.unidad + "</td>" +
                         "<td>" + item.rol + "</td>" +
                         "<td>" + item.created_at + "</td>" +
@@ -135,25 +137,35 @@ error_reporting(E_ALL);
             dataType: 'JSON',
             success: function (data) {
                 console.log(data);
-                // Vaciamos el cuerpo de la tabla 
-                $("tbody").empty();
-                $.each(data, function (i, item) {
-                    // Creamos una fila con los datos de cada usuario
-                    var fila = "<tr>" +
-                        "<td>" + item.id + "</td>" +
-                        "<td>" + item.matricula + "</td>" +
-                        "<td>" + item.nombre + "</td>" +
-                        "<td>" + item.unidad + "</td>" +
-                        "<td>" + item.rol + "</td>" +
-                        "<td>" + item.created_at + "</td>" +
-                        "<td>" + item.updated_at + "</td>" +
-                        "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
-                        "</tr>";
-                    $("tbody").append(fila);
-                });
                 var table = $('#tablaUsuarios');
                 table.animate({ marginTop: '15%', opacity: '0.2' }, "slow");
-                table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                // Vaciamos el cuerpo de la tabla 
+                $("tbody").empty();
+                if (data.length <= 0) {
+                    $("tbody").empty();
+                    var fila = "<tr>" +
+                        "<td colspan='11'>No se encontraron usuarios</td>" +
+                        "</tr>";
+                    $("tbody").append(fila);
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                } else {
+                    $.each(data, function (i, item) {
+                        // Creamos una fila con los datos de cada usuario
+                        var fila = "<tr>" +
+                            "<td>" + item.id + "</td>" +
+                            "<td>" + item.matricula + "</td>" +
+                            "<td>" + item.nombre + "</td>" +
+                            "<td>" + item.monto + "</td>" +
+                            "<td>" + item.unidad + "</td>" +
+                            "<td>" + item.rol + "</td>" +
+                            "<td>" + item.created_at + "</td>" +
+                            "<td>" + item.updated_at + "</td>" +
+                            "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
+                            "</tr>";
+                        $("tbody").append(fila);
+                    });
+                    table.animate({ opacity: '1', marginTop: '0' }, "slow");
+                }
             }
         })
     });

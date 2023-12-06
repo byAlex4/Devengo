@@ -99,8 +99,8 @@ error_reporting(E_ALL);
                             "<td>" + item.clave + "</td>" +
                             "<td>" + item.proveedor + "</td>" +
                             "<td>" + item.descripcion + "</td>" +
-                            "<td>" + item.mont_max + "</td>" +
-                            "<td>" + item.mont_min + "</td>" +
+                            "<td>$" + item.mont_max + "</td>" +
+                            "<td>$" + item.mont_min + "</td>" +
                             "<td>" + item.fecha_in + "</td>" +
                             "<td>" + item.fecha_fin + "</td>" +
                             "<td>" + item.created_at + "</td>" +
@@ -172,8 +172,8 @@ error_reporting(E_ALL);
                             "<td>" + item.clave + "</td>" +
                             "<td>" + item.proveedor + "</td>" +
                             "<td>" + item.descripcion + "</td>" +
-                            "<td>" + item.mont_max + "</td>" +
-                            "<td>" + item.mont_min + "</td>" +
+                            "<td>$" + item.mont_max + "</td>" +
+                            "<td>$" + item.mont_min + "</td>" +
                             "<td>" + item.fecha_in + "</td>" +
                             "<td>" + item.fecha_fin + "</td>" +
                             "<td>" + item.created_at + "</td>" +

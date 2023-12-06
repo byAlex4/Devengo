@@ -11,10 +11,13 @@ try {
     DATE_FORMAT( usuarios.created_at, '%d-%M-%Y') AS created_at,
     DATE_FORMAT( usuarios.updated_at, '%d-%M-%Y') AS updated_at,
     unidades.nombre AS unidad, 
+    FORMAT(devengos.monto, 3, 'es-MX') AS monto,
     roles.nombre AS rol, usuarios.contra 
     FROM usuarios 
     JOIN unidades ON usuarios.unidadID = unidades.id 
-    JOIN roles ON usuarios.rolID = roles.id");
+    JOIN roles ON usuarios.rolID = roles.id
+    JOIN devengos ON usuarios.id = devengos.usuarioID
+    GROUP BY id");
 
     // Ejecutamos la consulta SQL sin parámetros
     $stmt->execute();
