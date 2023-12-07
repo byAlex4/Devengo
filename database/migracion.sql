@@ -48,6 +48,15 @@ CREATE TABLE
     );
 
 CREATE TABLE
+    cuentas (
+        id INT(10) AUTO_INCREMENT PRIMARY KEY,
+        cuenta INT(10) NOT NULL,
+        descripcion VARCHAR(50) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE
     devengos (
         id INT(10) AUTO_INCREMENT PRIMARY KEY,
         fecha DATE,
@@ -61,56 +70,24 @@ CREATE TABLE
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-INSERT INTO
-    unidades (nombre, descripcion)
-VALUES ("OOAD", "OOAD AGUASCALIENTES"), (
-        "HGZ1",
-        "HOSPITAL GENERAL DE ZONA 1"
-    ), (
-        "HGZ2",
-        "HOSPITAL GENERAL DE ZONA 2"
-    ), (
-        "HGZ3",
-        "HOSPITAL GENERAL DE ZONA 3"
-    ), (
-        "UMAA",
-        "UNIDAD MEDICA DE ATENCION AMBULATORIA"
-    ), (
-        "UMF1",
-        "UNIDAD DE MEDICINA FAMILIAR 1"
-    ), (
-        "UMF2",
-        "UNIDAD DE MEDICINA FAMILIAR 2"
-    ), (
-        "UMF3",
-        "UNIDAD DE MEDICINA FAMILIAR 3"
-    ), (
-        "UMF4",
-        "UNIDAD DE MEDICINA FAMILIAR 4"
-    ), (
-        "UMF5",
-        "UNIDAD DE MEDICINA FAMILIAR 5"
-    ), (
-        "UMF6",
-        "UNIDAD DE MEDICINA FAMILIAR 6"
-    ), (
-        "UMF7",
-        "UNIDAD DE MEDICINA FAMILIAR 7"
-    ), (
-        "UMF8",
-        "UNIDAD DE MEDICINA FAMILIAR 8"
-    ), (
-        "UMF9",
-        "UNIDAD DE MEDICINA FAMILIAR 9"
-    ), (
-        "UMF10",
-        "UNIDAD DE MEDICINA FAMILIAR 10"
-    ), (
-        "UMF11",
-        "UNIDAD DE MEDICINA FAMILIAR 11"
-    ), (
-        "UMF12",
-        "UNIDAD DE MEDICINA FAMILIAR 12"
-    );
+INSERT INTO unidades (nombre, descripcion)
+VALUES 
+    ("OOAD", "OOAD AGUASCALIENTES"), 
+    ("HGZ1", "HOSPITAL GENERAL DE ZONA 1"), 
+    ("HGZ2","HOSPITAL GENERAL DE ZONA 2"), 
+    ("HGZ3","HOSPITAL GENERAL DE ZONA 3"), 
+    ("UMAA","UNIDAD MEDICA DE ATENCION AMBULATORIA"), 
+    ("UMF1","UNIDAD DE MEDICINA FAMILIAR 1"), 
+    ("UMF2","UNIDAD DE MEDICINA FAMILIAR 2"), 
+    ("UMF3","UNIDAD DE MEDICINA FAMILIAR 3"), 
+    ("UMF4","UNIDAD DE MEDICINA FAMILIAR 4"), 
+    ("UMF5","UNIDAD DE MEDICINA FAMILIAR 5"), 
+    ("UMF6","UNIDAD DE MEDICINA FAMILIAR 6"), 
+    ("UMF7","UNIDAD DE MEDICINA FAMILIAR 7"), 
+    ("UMF8","UNIDAD DE MEDICINA FAMILIAR 8"), 
+    ("UMF9","UNIDAD DE MEDICINA FAMILIAR 9"), 
+    ("UMF10","UNIDAD DE MEDICINA FAMILIAR 10"), 
+    ("UMF11","UNIDAD DE MEDICINA FAMILIAR 11"), 
+    ("UMF12","UNIDAD DE MEDICINA FAMILIAR 12");
 
 INSERT INTO roles (nombre) VALUES ( "Administrador"), ( "Usuario");

@@ -87,6 +87,7 @@
           <div class="navbar-nav">
             <?php if ($_SESSION['rol'] == "Administrador") { ?>
               <a class="nav-link" href="./main.php" style="color: #ffffff; !important">Inicio</a>
+              <a class="nav-link" href="./cuentas.php" style="color: #ffffff; !important">Cuentas</a>
               <a class="nav-link" href="./contratos.php" style="color: #ffffff; !important">Contratos</a>
               <a class="nav-link" href="./devengos.php" style="color: #ffffff; !important">Devengos</a>
               <a class="nav-link" href="./usuarios.php" style="color: #ffffff; !important">Usuarios</a>

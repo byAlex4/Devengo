@@ -5,15 +5,7 @@ try {
     include '../../config.php';
 
     // Preparamos la consulta SQL para obtener los datos de los usuarios, sus unidades y sus roles
-    $stmt = $conexion->prepare("SELECT usuarios.id, usuarios.matricula, usuarios.nombre, 
-        DATE_FORMAT( usuarios.created_at, '%d-%M-%Y') AS created_at, 
-        DATE_FORMAT( usuarios.updated_at, '%d-%M-%Y') AS updated_at, 
-        unidades.nombre AS unidad, IFNULL(FORMAT(SUM(devengos.monto), 3, 'es-MX'), 'Sin monto') AS monto, 
-        roles.nombre AS rol, usuarios.contra FROM usuarios 
-        JOIN unidades ON usuarios.unidadID = unidades.id 
-        JOIN roles ON usuarios.rolID = roles.id 
-        LEFT JOIN devengos ON usuarios.id = devengos.usuarioID 
-        GROUP BY id");
+    $stmt = $conexion->prepare("SELECT * FROM cuentas");
 
     // Ejecutamos la consulta SQL sin parámetros
     $stmt->execute();

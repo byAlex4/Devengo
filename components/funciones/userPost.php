@@ -8,31 +8,29 @@ if (
     || isset($_POST['bscMatricula'])
     || isset($_POST['bscRol'])
 ) {
-    $consultaSQL = "SELECT usuarios.id, 
-    usuarios.matricula, 
-    usuarios.nombre, 
-    DATE_FORMAT( usuarios.created_at, '%d-%M-%Y') AS created_at,
-    DATE_FORMAT( usuarios.updated_at, '%d-%M-%Y') AS updated_at,
-    unidades.nombre AS unidad, 
-    FORMAT(devengos.monto, 3, 'es-MX') AS monto,
-    roles.nombre AS rol, usuarios.contra 
-    FROM usuarios 
-    JOIN unidades ON usuarios.unidadID = unidades.id 
-    JOIN roles ON usuarios.rolID = roles.id
-    JOIN devengos ON usuarios.id = devengos.usuarioID ";
+    $consultaSQL = "SELECT usuarios.id, usuarios.matricula, usuarios.nombre, 
+        DATE_FORMAT( usuarios.created_at, '%d-%M-%Y') AS created_at, 
+        DATE_FORMAT( usuarios.updated_at, '%d-%M-%Y') AS updated_at, 
+        unidades.nombre AS unidad, FORMAT(SUM(devengos.monto), 3, 'es-MX') AS monto, 
+        roles.nombre AS rol, usuarios.contra FROM usuarios 
+        JOIN unidades ON usuarios.unidadID = unidades.id 
+        JOIN roles ON usuarios.rolID = roles.id 
+        JOIN devengos ON usuarios.id = devengos.usuarioID ";
 
     if (!empty($_POST['bscMatricula'])) {
-        $consultaSQL .= "WHERE matricula LIKE '%" . $_POST['bscMatricula'] . "%' GROUP BY id";
+        $consultaSQL .= "WHERE matricula LIKE '%" . $_POST['bscMatricula'] . "%'";
     }
     if (!empty($_POST['bscNombre'])) {
-        $consultaSQL .= "WHERE usuarios.nombre LIKE '%" . $_POST['bscNombre'] . "%' GROUP BY id";
+        $consultaSQL .= "WHERE usuarios.nombre LIKE '%" . $_POST['bscNombre'] . "%'";
     }
     if (!empty($_POST['bscRol'])) {
-        $consultaSQL .= "WHERE roles.nombre LIKE '%" . $_POST['bscRol'] . "%' GROUP BY id";
+        $consultaSQL .= "WHERE roles.nombre LIKE '%" . $_POST['bscRol'] . "%'";
     }
     if (!empty($_POST['bscUnidad'])) {
-        $consultaSQL .= "WHERE unidades.nombre LIKE '%" . $_POST['bscUnidad'] . "%' GROUP BY id";
+        $consultaSQL .= "WHERE unidades.nombre LIKE '%" . $_POST['bscUnidad'] . "%'";
     }
+
+    $consultaSQL .= "GROUP BY id";
 
     $sentecia = $conexion->prepare($consultaSQL);
     $sentecia->execute();
