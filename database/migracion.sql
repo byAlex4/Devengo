@@ -33,9 +33,18 @@ CREATE TABLE
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-CREATE TABLE
-    contratos (
+CREATE TABLE cuentas (
         id INT(10) AUTO_INCREMENT PRIMARY KEY,
+        cuenta INT(10) NOT NULL,
+        descripcion VARCHAR(50) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE contratos (
+        id INT(10) AUTO_INCREMENT PRIMARY KEY,
+        cuentaID INT(10) NOT NULL,
+        FOREIGN KEY(cuentaID) REFERENCES cuentas(id),
         proveedor VARCHAR(50) NOT NULL,
         clave VARCHAR(20) NOT NULL UNIQUE,
         descripcion VARCHAR(50) NOT NULL,
@@ -43,15 +52,6 @@ CREATE TABLE
         mont_min DECIMAL(10, 3) NOT NULL,
         fecha_in DATE,
         fecha_fin DATE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
-CREATE TABLE
-    cuentas (
-        id INT(10) AUTO_INCREMENT PRIMARY KEY,
-        cuenta INT(10) NOT NULL,
-        descripcion VARCHAR(50) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );

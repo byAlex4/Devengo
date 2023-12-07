@@ -36,14 +36,14 @@ error_reporting(E_ALL);
                     <tr>
                         <th>ID</th>
                         <th>Clave</th>
+                        <th>Cuenta</th>
+                        <th></th>
                         <th>Proveedor</th>
                         <th>Descripcipón</th>
                         <th>Monto Maximo</th>
                         <th>Monton Minimo</th>
                         <th>Fecha de Inicio</th>
                         <th>Fecha de Finalización</th>
-                        <th>Created</th>
-                        <th>Updated</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -97,14 +97,14 @@ error_reporting(E_ALL);
                         var fila = "<tr>" +
                             "<td>" + item.id + "</td>" +
                             "<td>" + item.clave + "</td>" +
+                            "<td>" + item.cuenta + "</td>" +
+                            "<td>" + item.cuentaDes + "</td>" +
                             "<td>" + item.proveedor + "</td>" +
                             "<td>" + item.descripcion + "</td>" +
                             "<td>$" + item.mont_max + "</td>" +
                             "<td>$" + item.mont_min + "</td>" +
                             "<td>" + item.fecha_in + "</td>" +
                             "<td>" + item.fecha_fin + "</td>" +
-                            "<td>" + item.created_at + "</td>" +
-                            "<td>" + item.updated_at + "</td>" +
                             "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
                             "</tr>";
                         $("tbody").append(fila);
@@ -170,14 +170,14 @@ error_reporting(E_ALL);
                         var fila = "<tr>" +
                             "<td>" + item.id + "</td>" +
                             "<td>" + item.clave + "</td>" +
+                            "<td>" + item.cuenta + "</td>" +
+                            "<td>" + item.cuentaDes + "</td>" +
                             "<td>" + item.proveedor + "</td>" +
                             "<td>" + item.descripcion + "</td>" +
                             "<td>$" + item.mont_max + "</td>" +
                             "<td>$" + item.mont_min + "</td>" +
                             "<td>" + item.fecha_in + "</td>" +
                             "<td>" + item.fecha_fin + "</td>" +
-                            "<td>" + item.created_at + "</td>" +
-                            "<td>" + item.updated_at + "</td>" +
                             "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
                             "</tr>";
                         $("tbody").append(fila);
@@ -190,6 +190,7 @@ error_reporting(E_ALL);
     //Funcion de crear contratos
     $(document).on('click', '.crear', function (e) {
         e.preventDefault();
+        var cuenta = $('#cuentaCrear').val();
         var clave = $('#claveCrear').val();
         var descripcion = $('#desCrear').val();
         var mont_max = $('#maxCrear').val();
@@ -201,7 +202,7 @@ error_reporting(E_ALL);
         mont_max = parseFloat(mont_max);
         var objfecha_in = new Date(fecha_in);
         var objfecha_fin = new Date(fecha_fin);
-        if (clave == "" || descripcion == "" || isNaN(mont_max) || isNaN(mont_min) ||
+        if (cuenta == "" || clave == "" || descripcion == "" || isNaN(mont_max) || isNaN(mont_min) ||
             isNaN(objfecha_in.getTime()) || isNaN(objfecha_in.getTime()) || proveedor == "") {
             Swal.fire({
                 title: 'Advertecia!',
@@ -237,6 +238,7 @@ error_reporting(E_ALL);
             url: 'funciones/contratoPost.php',
             type: 'POST',
             data: {
+                'cuenta': cuenta,
                 'clave': clave,
                 'descripcion': descripcion,
                 'mont_max': mont_max,

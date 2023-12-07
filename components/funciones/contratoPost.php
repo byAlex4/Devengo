@@ -7,20 +7,21 @@ if (
     || isset($_POST['bscDesc'])
     || isset($_POST['bscMonto'])
     || isset($_POST['bscFecha'])
-    || isset($_POST['bscProveedor'])
+    || isset($_POST['bscProv'])
 ) {
     $consultaSQL = "SELECT 
-    id, 
-    proveedor, 
-    clave, 
-    descripcion, 
-    mont_max, 
-    mont_min, 
-    DATE_FORMAT( fecha_in, '%d-%M-%Y') AS fecha_in,
-    DATE_FORMAT( fecha_fin, '%d-%M-%Y') AS fecha_fin, 
-    DATE_FORMAT( created_at, '%d-%M-%Y') AS created_at, 
-    DATE_FORMAT( updated_at, '%d-%M-%Y') AS updated_at
-    FROM contratos ";
+    contratos.id, 
+    contratos.proveedor, 
+    contratos.clave, 
+    cuentas.cuenta AS cuenta,
+    cuentas.descripcion AS cuentaDes,
+    contratos.descripcion, 
+    FORMAT(contratos.mont_max, 3, 'es-MX') AS mont_max, 
+    FORMAT(contratos.mont_min, 3, 'es-MX') AS mont_min, 
+    DATE_FORMAT( contratos.fecha_in, '%d-%M-%Y') AS fecha_in,
+    DATE_FORMAT( contratos.fecha_fin, '%d-%M-%Y') AS fecha_fin
+    FROM contratos
+    JOIN cuentas ON contratos.cuentaID = cuentas.id ";
     if (!empty($_POST['bscClave'])) {
         $consultaSQL .= "WHERE clave LIKE '%" . $_POST['bscClave'] . "%'";
     }
@@ -34,7 +35,7 @@ if (
         $consultaSQL .= "WHERE DATE_FORMAT(fecha_in, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
     }
     if (!empty($_POST['bscProveedor'])) {
-        $consultaSQL .= "WHERE proveedor = '" . $_POST['bscProveedor'] . "'";
+        $consultaSQL .= "WHERE proveedor LIKE '%" . $_POST['bscProveedor'] . "%'";
     }
     $sentecia = $conexion->prepare($consultaSQL);
     $sentecia->execute();
@@ -97,7 +98,8 @@ if (
             echo json_encode(array($response));
         } else {
             if (
-                isset($_POST['clave'])
+                isset($_POST['cuenta'])
+                && isset($_POST['clave'])
                 && isset($_POST['descripcion'])
                 && isset($_POST['mont_max'])
                 && isset($_POST['mont_min'])
@@ -107,6 +109,7 @@ if (
             ) {
                 try {
                     $contrato = array(
+                        'cuenta' => $_POST['cuenta'],
                         'clave' => $_POST['clave'],
                         'descripcion' => $_POST['descripcion'],
                         'mont_max' => $_POST['mont_max'],
@@ -116,7 +119,7 @@ if (
                         'proveedor' => $_POST['proveedor']
                     );
 
-                    $consultaCrear = "INSERT INTO contratos (clave, descripcion, mont_max, mont_min, fecha_in, fecha_fin, proveedor)";
+                    $consultaCrear = "INSERT INTO contratos (cuentaID, clave, descripcion, mont_max, mont_min, fecha_in, fecha_fin, proveedor)";
                     $consultaCrear .= "VALUES (:" . implode(", :", array_keys($contrato)) . ")";
 
                     $sentenciaCrear = $conexion->prepare($consultaCrear);
