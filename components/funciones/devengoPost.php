@@ -107,6 +107,9 @@ if (
         echo json_encode($json);
     } else {
         if (isset($_POST['contr'])) {
+            // Iniciar la sesión
+            session_start();
+            $unidad = $_SESSION['unidad'];
             try {
                 // Obtener el valor de 'id' del cuerpo de la solicitud POST
                 $id = $_POST['contr'];
@@ -129,29 +132,53 @@ if (
                 $contrato = $error;
             }
             try {
-                $consultaSQL = "SELECT
+                if ($_SESSION['rol'] == "Administrador") {
+                    $consultaSQL = "SELECT
                     SUM(d.monto) AS monto,
                     MONTH(d.fecha) AS mes,
                     d.descripcion,
-                    (
-                        SELECT SUM(d2.monto)
+                    (SELECT SUM(d2.monto)
                         FROM devengos d2
                         JOIN usuarios u2 ON d2.usuarioID = u2.id
                         WHERE u2.unidadID = u.unidadID AND MONTH(d2.fecha) <= MONTH(d.fecha)
                     ) AS acumulado,
                     un.nombre AS unidad
-                FROM
-                    devengos d
-                JOIN usuarios u ON d.usuarioID = u.id
-                JOIN unidades un ON u.unidadID = un.id
-                WHERE `contratoID` = $id
-                GROUP BY
-                    MONTH(d.fecha),
-                    u.unidadID,
-                    d.descripcion
-                ORDER BY
-                    MONTH(d.fecha) ASC,
-                    u.unidadID ASC;";
+                    FROM
+                        devengos d
+                    JOIN usuarios u ON d.usuarioID = u.id
+                    JOIN unidades un ON u.unidadID = un.id
+                    WHERE `contratoID` = $id
+                    GROUP BY
+                        MONTH(d.fecha),
+                        u.unidadID,
+                        d.descripcion
+                    ORDER BY
+                        MONTH(d.fecha) ASC,
+                        u.unidadID ASC;";
+                } else {
+                    $consultaSQL = "SELECT
+                    SUM(d.monto) AS monto,
+                    MONTH(d.fecha) AS mes,
+                    d.descripcion,
+                    (SELECT SUM(d2.monto)
+                        FROM devengos d2
+                        JOIN usuarios u2 ON d2.usuarioID = u2.id
+                        WHERE u2.unidadID = u.unidadID AND MONTH(d2.fecha) <= MONTH(d.fecha)
+                    ) AS acumulado,
+                    un.nombre AS unidad
+                    FROM
+                        devengos d
+                    JOIN usuarios u ON d.usuarioID = u.id
+                    JOIN unidades un ON u.unidadID = un.id
+                    WHERE `contratoID` = $id AND un.nombre = '" . $_SESSION['unidad'] . "'
+                    GROUP BY
+                        MONTH(d.fecha),
+                        u.unidadID,
+                        d.descripcion
+                    ORDER BY
+                        MONTH(d.fecha) ASC,
+                        u.unidadID ASC;";
+                }
 
                 $sentencia = $conexion->prepare($consultaSQL);
                 $sentencia->execute();
