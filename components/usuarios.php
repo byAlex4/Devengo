@@ -85,7 +85,7 @@ error_reporting(E_ALL);
                         "<td>" + item.id + "</td>" +
                         "<td>" + item.matricula + "</td>" +
                         "<td>" + item.nombre + "</td>" +
-                        "<td>" + item.monto + "</td>" +
+                        "<td>$" + item.monto + "</td>" +
                         "<td>" + item.unidad + "</td>" +
                         "<td>" + item.rol + "</td>" +
                         "<td>" + item.created_at + "</td>" +
@@ -155,7 +155,7 @@ error_reporting(E_ALL);
                             "<td>" + item.id + "</td>" +
                             "<td>" + item.matricula + "</td>" +
                             "<td>" + item.nombre + "</td>" +
-                            "<td>" + item.monto + "</td>" +
+                            "<td>$" + item.monto + "</td>" +
                             "<td>" + item.unidad + "</td>" +
                             "<td>" + item.rol + "</td>" +
                             "<td>" + item.created_at + "</td>" +

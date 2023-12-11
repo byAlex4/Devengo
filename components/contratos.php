@@ -18,13 +18,13 @@ error_reporting(E_ALL);
             <form action="post">
                 <div class="input-group mb-4">
                     <span class=" input-group-text">Clave</span>
-                    <input type="text" class="form-control" id="bscClave" style="min-width: 100px; max-width: 130px;">
+                    <input type="text" class="form-control" id="bscClave" style="min-width: 100px; max-width: 120px;">
+                    <span class=" input-group-text">Cuenta</span>
+                    <input type="text" class="form-control" id="bscCuenta" style="min-width: 100px; max-width: 120px;">
                     <span class=" input-group-text">Proveedor</span>
                     <input type="text" class="form-control" id="bscProv" style="min-width: 100px; ">
-                    <span class="input-group-text">Descripcion</span>
-                    <input type="text" class="form-control" id="bscDesc" style="min-width: 100px;">
                     <span class="input-group-text">Monto</span>
-                    <input type="text" class="form-control" id="bscMonto" style="min-width: 100px;">
+                    <input type="text" class="form-control" id="bscMonto" style="min-width: 100px; max-width: 150px;">
                     <span class="input-group-text">Mes</span>
                     <input type="month" class="form-control" id="bscFecha" style="min-width: 100px; ">
                     <button class="btn btn-outline-secondary buscar" name="submit" type="button">Buscar</button>
@@ -122,7 +122,7 @@ error_reporting(E_ALL);
     });
 
     // Detectar la tecla Enter en cualquier input del formulario
-    $('#bscClave, #bscDesc, #bscMonto, #bscFecha, #bscProv').keypress(function (e) {
+    $('#bscClave, #bscCuenta, #bscMonto, #bscFecha, #bscProv').keypress(function (e) {
         // Obtener el código de la tecla presionada
         var code = e.which;
         // Si es igual a 13 (Enter)
@@ -136,17 +136,17 @@ error_reporting(E_ALL);
 
     $(document).on('click', '.buscar', function (e) {
         var clave = $('#bscClave').val();
-        var descripcion = $('#bscDesc').val();
+        var cuenta = $('#bscCuenta').val();
         var monto = $('#bscMonto').val();
         var fecha = $('#bscFecha').val();
         var proveedor = $('#bscProv').val();
-        console.log(clave, proveedor, descripcion, monto, fecha);
+        console.log(clave, cuenta, proveedor, monto, fecha);
         $.ajax({
             url: 'funciones/contratoPost.php',
             type: 'POST',
             data: {
+                'bscCuenta': cuenta,
                 'bscClave': clave,
-                'bscDesc': descripcion,
                 'bscMonto': monto,
                 'bscFecha': fecha,
                 'bscProveedor': proveedor
@@ -290,6 +290,7 @@ error_reporting(E_ALL);
                 console.log(data)
                 $('#formEdit').val(data.id);
                 $('#idEdit').val(data.id);
+                $('#cuentaEdit').val(data.cuenta);
                 $('#claveEdit').val(data.clave);
                 $('#desEdit').val(data.descripcion);
                 $('#maxEdit').val(data.mont_max);
@@ -304,6 +305,7 @@ error_reporting(E_ALL);
     $(document).on('click', '.editar', function (e) {
         e.preventDefault();
         var id = $('#idEdit').val();
+        var cuenta = $('#cuentaEdit').val();
         var clave = $('#claveEdit').val();
         var descripcion = $('#desEdit').val();
         var mont_max = $('#maxEdit').val();
@@ -311,12 +313,11 @@ error_reporting(E_ALL);
         var fecha_in = $('#iniEdit').val();
         var fecha_fin = $('#finEdit').val();
         var proveedor = $('#provEdit').val();
-
         mont_min = parseFloat(mont_min);
         mont_max = parseFloat(mont_max);
         var objfecha_in = new Date(fecha_in);
         var objfecha_fin = new Date(fecha_fin);
-        if (clave == "" || descripcion == "" || isNaN(mont_max) || isNaN(mont_min) ||
+        if (cuenta == "" || clave == "" || descripcion == "" || isNaN(mont_max) || isNaN(mont_min) ||
             isNaN(objfecha_in.getTime()) || isNaN(objfecha_in.getTime()) || proveedor == "") {
             Swal.fire({
                 title: 'Advertecia!',
@@ -354,6 +355,7 @@ error_reporting(E_ALL);
             type: 'POST',
             data: {
                 'editar': id,
+                'cuenta': cuenta,
                 'clave': clave,
                 'descripcion': descripcion,
                 'mont_max': mont_max,

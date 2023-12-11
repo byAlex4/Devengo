@@ -17,8 +17,8 @@ error_reporting(E_ALL);
         <div style="overflow-x: auto; display: grid">
             <form action="post">
                 <div class="input-group mb-4">
-                    <span class=" input-group-text">Descripcion</span>
-                    <input type="text" class="form-control" id="bscDesc" style="min-width: 100px;">
+                    <span class=" input-group-text">Cuenta</span>
+                    <input type="text" class="form-control" id="bscCuenta" style="min-width: 100px;">
                     <span class="input-group-text">Montos</span>
                     <input type="text" class="form-control" id="bscMonto" style="min-width: 100px;">
                     <span class="input-group-text">Contratos</span>
@@ -35,6 +35,7 @@ error_reporting(E_ALL);
                 <thead class="thead-primary" style="background-color: #a1d6aa; width: 100%;">
                     <tr>
                         <th>ID</th>
+                        <th>Cuenta</th>
                         <th>Proveedor</th>
                         <th>Fecha de cargo</th>
                         <th>Descripcion</th>
@@ -43,8 +44,6 @@ error_reporting(E_ALL);
                         <th>Saldo de contrato</th>
                         <th>Saldo disponible</th>
                         <th>Unidad</th>
-                        <th>Created</th>
-                        <th>Updated</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -52,6 +51,8 @@ error_reporting(E_ALL);
                 </tbody>
             </table>
         </div>
+        <button id="btnExportar" class="btn btn-primary m-3" type="button"
+            style="background-color: #2a8f60; border-color:#8bc6a8; position: absolute; right:0; z-index: -1;">Exportar</button>
     </div>
     <!-- Modals -->
     <div class="modal fade" id="crearModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -77,7 +78,53 @@ error_reporting(E_ALL);
 
 <!-- Script para manejar el evento de clic del botón -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/xlsx@latest/dist/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/file-saverjs@latest/FileSaver.min.js"></script>
+<script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
+
 <script>
+    document.querySelector("#btnExportar").addEventListener("click", function () {
+        let tableExport = new TableExport(document.querySelector("#DatosDevengo"), {
+            exportButtons: false, // No queremos botones
+            filename: "Devengo-devengo", // Nombre del archivo de Excel
+            sheetname: "Devengo", // Título de la hoja
+        });
+
+        let datos = tableExport.getExportData();
+        let preferenciasDocumento = datos.DatosDevengo.xlsx;
+
+        tableExport.export2file(
+            preferenciasDocumento.data,
+            preferenciasDocumento.mimeType,
+            preferenciasDocumento.filename,
+            preferenciasDocumento.fileExtension,
+            preferenciasDocumento.merges,
+            preferenciasDocumento.RTL,
+            preferenciasDocumento.sheetname
+        );
+    });
+
+    document.querySelector("#btnExportar2").addEventListener("click", function () {
+        let tableExport = new TableExport(document.querySelector("#tablaReporte"), {
+            exportButtons: false, // No queremos botones
+            filename: "Reporte-devengo", // Nombre del archivo de Excel
+            sheetname: "Reporte", // Título de la hoja
+        });
+
+        let datos = tableExport.getExportData();
+        let preferenciasDocumento = datos.tablaReporte.xlsx;
+
+        tableExport.export2file(
+            preferenciasDocumento.data,
+            preferenciasDocumento.mimeType,
+            preferenciasDocumento.filename,
+            preferenciasDocumento.fileExtension,
+            preferenciasDocumento.merges,
+            preferenciasDocumento.RTL,
+            preferenciasDocumento.sheetname
+        );
+    });
     // Función para cargar los datos
     function cargarDatos() {
         // Vaciamos el cuerpo de la tabla
@@ -100,6 +147,7 @@ error_reporting(E_ALL);
                         // Creamos una fila con los datos de cada usuario
                         var fila = "<tr>" +
                             "<td>" + item.id + "</td>" +
+                            "<td>" + item.cuenta + "</td>" +
                             "<td>" + item.proveedor + "</td>" +
                             "<td>" + item.fecha + "</td>" +
                             "<td>" + item.descripcion + "</td>" +
@@ -108,8 +156,6 @@ error_reporting(E_ALL);
                             "<td>$" + item.saldo + "</td>" +
                             "<td>$" + item.saldoDis + "</td>" +
                             "<td>" + item.unidad + "</td>" +
-                            "<td>" + item.created_at + "</td>" +
-                            "<td>" + item.updated_at + "</td>" +
                             "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
                             "</tr>";
                         $(".DatosDevengo").append(fila);
@@ -122,7 +168,7 @@ error_reporting(E_ALL);
     }
 
     // Detectar la tecla Enter en cualquier input del formulario
-    $('#bscDesc, #bscMonto, #bscContrato, #bscUnidad, #bscFecha').keypress(function (e) {
+    $('#bscCuenta, #bscMonto, #bscContrato, #bscUnidad, #bscFecha').keypress(function (e) {
         // Obtener el código de la tecla presionada
         var code = e.which;
         // Si es igual a 13 (Enter)
@@ -135,17 +181,17 @@ error_reporting(E_ALL);
     });
 
     $(document).on('click', '.buscar', function (e) {
-        var descripcion = $('#bscDesc').val();
+        var cuenta = $('#bscCuenta').val();
         var monto = $('#bscMonto').val();
         var contrato = $('#bscContrato').val();
         var unidad = $('#bscUnidad').val();
         var fecha = $('#bscFecha').val();
-        console.log(descripcion, monto, contrato, unidad, fecha);
+        console.log(cuenta, monto, contrato, unidad, fecha);
         $.ajax({
             url: 'funciones/devengoPost.php',
             type: 'POST',
             data: {
-                'bscDesc': descripcion,
+                'bscCuenta': cuenta,
                 'bscMonto': monto,
                 'bscContrato': contrato,
                 'bscUnidad': unidad,
@@ -169,16 +215,15 @@ error_reporting(E_ALL);
                         //Creamos una fila con los datos de cada usuario
                         var fila = "<tr>" +
                             "<td>" + item.id + "</td>" +
+                            "<td>" + item.cuenta + "</td>" +
                             "<td>" + item.proveedor + "</td>" +
                             "<td>" + item.fecha + "</td>" +
                             "<td>" + item.descripcion + "</td>" +
-                            "<td>$" + item.monto + "</td>" +
+                            "<td>$" + item.monto_formato + "</td>" +
                             "<td> <button type='button' class='btn contr btn-link' data-bs-toggle='modal' data-bs-target='#mostrarModal' data-id='" + item.contratoID + "'>" + item.contrato + "</button> </td>" +
                             "<td>$" + item.saldo + "</td>" +
                             "<td>$" + item.saldoDis + "</td>" +
                             "<td>" + item.unidad + "</td>" +
-                            "<td>" + item.created_at + "</td>" +
-                            "<td>" + item.updated_at + "</td>" +
                             "<td><button type='button' class='btn shw' data-bs-toggle='modal' data-bs-target='#editarModal' data-id='" + item.id + "'>✏️</button></td>" +
                             "</tr>";
                         $(".DatosDevengo").append(fila);

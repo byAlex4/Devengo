@@ -4,7 +4,7 @@ include '../../config.php';
 
 if (
     isset($_POST['bscClave'])
-    || isset($_POST['bscDesc'])
+    || isset($_POST['bscCuenta'])
     || isset($_POST['bscMonto'])
     || isset($_POST['bscFecha'])
     || isset($_POST['bscProv'])
@@ -25,8 +25,8 @@ if (
     if (!empty($_POST['bscClave'])) {
         $consultaSQL .= "WHERE clave LIKE '%" . $_POST['bscClave'] . "%'";
     }
-    if (!empty($_POST['bscDesc'])) {
-        $consultaSQL .= "WHERE descripcion LIKE '%" . $_POST['bscDesc'] . "%'";
+    if (!empty($_POST['bscCuenta'])) {
+        $consultaSQL .= "WHERE cuentas.cuenta LIKE '%" . $_POST['bscCuenta'] . "%'";
     }
     if (!empty($_POST['bscMonto'])) {
         $consultaSQL .= "WHERE mont_max >=" . $_POST['bscMonto'];
@@ -57,6 +57,7 @@ if (
             //Crear una respuesta
             $respuesta = array(
                 'id' => $show['id'],
+                'cuenta' => $show['cuentaID'],
                 'clave' => $show['clave'],
                 'descripcion' => $show['descripcion'],
                 'mont_max' => $show['mont_max'],
@@ -78,6 +79,7 @@ if (
             try {
                 // Obtener el valor de 'id' del cuerpo de la solicitud POST
                 $id = $_POST['editar'];
+                $cuenta = $_POST['cuenta'];
                 $clave = $_POST['clave'];
                 $descripcion = $_POST['descripcion'];
                 $mont_max = $_POST['mont_max'];
@@ -86,7 +88,7 @@ if (
                 $fecha_fin = $_POST['fecha_fin'];
                 $proveedor = $_POST['proveedor'];
 
-                $consulta = "UPDATE contratos SET proveedor='" . $proveedor . "', clave='" . $clave . "', descripcion='" . $descripcion . "', 
+                $consulta = "UPDATE contratos SET cuentaID = '" . $cuenta . "', proveedor='" . $proveedor . "', clave='" . $clave . "', descripcion='" . $descripcion . "', 
                 mont_max=" . $mont_max . ", mont_min=" . $mont_min . ", fecha_in='" . $fecha_in . "', fecha_fin='" . $fecha_fin . "', 
                 updated_at = NOW() WHERE id='" . $id . "'";
                 $sentecia = $conexion->prepare($consulta);
