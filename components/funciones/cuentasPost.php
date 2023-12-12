@@ -11,7 +11,7 @@ if (
     DATE_FORMAT( updated_at, '%d-%M-%Y') AS updated_at
     FROM cuentas ";
     if (!empty($_POST['bscNumero'])) {
-        $consultaSQL .= "WHERE cuenta LIKE '%" . $_POST['bscNumero'] . "%'";
+        $consultaSQL .= "WHERE cuenta LIKE '" . $_POST['bscNumero'] . "%'";
     }
     if (!empty($_POST['bscDesc'])) {
         $consultaSQL .= "WHERE descripcion LIKE '%" . $_POST['bscDesc'] . "%'";

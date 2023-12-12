@@ -35,7 +35,7 @@ CREATE TABLE
 
 CREATE TABLE cuentas (
         id INT(10) AUTO_INCREMENT PRIMARY KEY,
-        cuenta INT(10) NOT NULL,
+        cuenta VARCHAR(15) NOT NULL,
         descripcion VARCHAR(50) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

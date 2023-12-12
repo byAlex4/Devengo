@@ -63,7 +63,7 @@ if (
             WHERE unidades.nombre = '" . $_SESSION['unidad'] . "' ";
     }
     if (!empty($_POST['bscCuenta'])) {
-        $consultaSQL .= "AND cuentas.cuenta LIKE '%" . $_POST['bscCuenta'] . "%'";
+        $consultaSQL .= "AND cuentas.cuenta LIKE '" . $_POST['bscCuenta'] . "%'";
     }
     if (!empty($_POST['bscMonto'])) {
         $consultaSQL .= "AND devengos.monto >=" . $_POST['bscMonto'];

@@ -52,7 +52,7 @@ error_reporting(E_ALL);
             </table>
         </div>
         <button id="btnExportar" class="btn btn-primary m-3" type="button"
-            style="background-color: #2a8f60; border-color:#8bc6a8; position: absolute; right:0; z-index: -1;">Exportar</button>
+            style="background-color: #2a8f60; border-color:#8bc6a8; position: absolute; right:0; z-index: 0;">Exportar</button>
     </div>
     <!-- Modals -->
     <div class="modal fade" id="crearModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"

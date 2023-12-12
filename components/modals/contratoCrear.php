@@ -26,7 +26,7 @@
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text" id="claveCrear" class="form-control">
-                    <label for="claveCrear" style="color: gray">Clave</label>
+                    <label for="claveCrear" style="color: gray">Folio</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text" id="desCrear" class="form-control">

@@ -30,7 +30,7 @@
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text" id="claveEdit" class="form-control">
-                    <label for="claveEdit" style="color: gray">Clave</label>
+                    <label for="claveEdit" style="color: gray">Folio</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text" id="desEdit" class="form-control">

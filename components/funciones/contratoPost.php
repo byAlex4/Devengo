@@ -26,7 +26,7 @@ if (
         $consultaSQL .= "WHERE clave LIKE '%" . $_POST['bscClave'] . "%'";
     }
     if (!empty($_POST['bscCuenta'])) {
-        $consultaSQL .= "WHERE cuentas.cuenta LIKE '%" . $_POST['bscCuenta'] . "%'";
+        $consultaSQL .= "WHERE cuentas.cuenta LIKE '" . $_POST['bscCuenta'] . "%'";
     }
     if (!empty($_POST['bscMonto'])) {
         $consultaSQL .= "WHERE mont_max >=" . $_POST['bscMonto'];

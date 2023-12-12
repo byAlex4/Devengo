@@ -36,7 +36,6 @@ error_reporting(E_ALL);
                         <th>ID</th>
                         <th>Matricula</th>
                         <th>Nombre</th>
-                        <th>Monto</th>
                         <th>Unidad</th>
                         <th>Rol</th>
                         <th>Created</th>
@@ -85,7 +84,6 @@ error_reporting(E_ALL);
                         "<td>" + item.id + "</td>" +
                         "<td>" + item.matricula + "</td>" +
                         "<td>" + item.nombre + "</td>" +
-                        "<td>$" + item.monto + "</td>" +
                         "<td>" + item.unidad + "</td>" +
                         "<td>" + item.rol + "</td>" +
                         "<td>" + item.created_at + "</td>" +
@@ -155,7 +153,6 @@ error_reporting(E_ALL);
                             "<td>" + item.id + "</td>" +
                             "<td>" + item.matricula + "</td>" +
                             "<td>" + item.nombre + "</td>" +
-                            "<td>$" + item.monto + "</td>" +
                             "<td>" + item.unidad + "</td>" +
                             "<td>" + item.rol + "</td>" +
                             "<td>" + item.created_at + "</td>" +
