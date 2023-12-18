@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Devengo</title>
   <link href="../bootstrap-5.3.2-dist/css/bootstrap.css" rel="stylesheet">
   <link rel="shortcut icon" href="./img/imsslogo.ico" />

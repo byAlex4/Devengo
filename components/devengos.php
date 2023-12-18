@@ -51,8 +51,12 @@ error_reporting(E_ALL);
                 </tbody>
             </table>
         </div>
-        <button id="btnExportar" class="btn btn-primary m-3" type="button"
-            style="background-color: #2a8f60; border-color:#8bc6a8; position: absolute; right:0; z-index: 0;">Exportar</button>
+        <form action="funciones/export.php">
+            <button type='submit' class="btn btn-primary m-3"
+                style="background-color: #2a8f60; border-color:#8bc6a8;">Exportar</button>
+        </form>
+        <!--<button id="btnExportar" class="btn btn-primary m-3" type="button"
+            style="background-color: #2a8f60; border-color:#8bc6a8;">Exportar</button>-->
     </div>
     <!-- Modals -->
     <div class="modal fade" id="crearModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -84,16 +88,30 @@ error_reporting(E_ALL);
 <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
 
 <script>
-    document.querySelector("#btnExportar").addEventListener("click", function () {
+    /*document.querySelector("#btnExportar").addEventListener("click", function () {
         let tableExport = new TableExport(document.querySelector("#DatosDevengo"), {
-            exportButtons: false, // No queremos botones
+            exportButtons: false, // No queremos botones.
             filename: "Devengo-devengo", // Nombre del archivo de Excel
             sheetname: "Devengo", // Título de la hoja
+            onCellData: function (cell, row, col, data) {
+                // Ignora las columnas 9 y 10
+                if (col === 9 || col === 10) {
+                    return '';
+                }
+
+                // Manipula los datos de la columna 5
+                if (col === 5) {
+                    var value = data ? data.replace(/[$,]/g, '') : '';
+                    return parseFloat(value);
+                }
+
+                return data;
+            }
         });
 
         let datos = tableExport.getExportData();
         let preferenciasDocumento = datos.DatosDevengo.xlsx;
-
+        console.log(datos);
         tableExport.export2file(
             preferenciasDocumento.data,
             preferenciasDocumento.mimeType,
@@ -104,6 +122,7 @@ error_reporting(E_ALL);
             preferenciasDocumento.sheetname
         );
     });
+    */
 
     document.querySelector("#btnExportar2").addEventListener("click", function () {
         let tableExport = new TableExport(document.querySelector("#tablaReporte"), {
@@ -125,6 +144,8 @@ error_reporting(E_ALL);
             preferenciasDocumento.sheetname
         );
     });
+
+
     // Función para cargar los datos
     function cargarDatos() {
         // Vaciamos el cuerpo de la tabla
