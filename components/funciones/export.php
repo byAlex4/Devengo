@@ -27,21 +27,20 @@ if ($_SESSION['rol'] == "Administrador") {
                 JOIN unidades ON usuarios.unidadID = unidades.id
                 JOIN cuentas ON contratos.cuentaID = cuentas.id";
 } else {
-    $sql = "SELECT
-            devengos.id,
+    $sql = "SELECT devengos.id,
+            cuentas.cuenta as cuenta,
+             contratos.proveedor AS proveedor,
             DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
             devengos.descripcion,
-            FORMAT(devengos.monto, 3, 'es-MX') AS monto_formato,
-            cuentas.cuenta as cuenta,
+            devengos.monto,
             contratos.clave AS contrato,
-            FORMAT(contratos.mont_max, 3, 'es-MX') AS saldo, 
-            FORMAT((contratos.mont_max - (SELECT SUM(monto)FROM devengos
-            WHERE contratoID = contratos.id)),3, 'es-MX') AS saldoDis,
+            contratos.mont_max, 
+            (contratos.mont_max - (SELECT SUM(monto)FROM devengos
+            WHERE contratoID = contratos.id)) AS saldoDis,
             unidades.nombre AS unidad,
             usuarios.nombre AS usuario,
             DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
-            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
-                contratos.proveedor AS proveedor
+            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at
             FROM devengos
                 JOIN contratos ON devengos.contratoID = contratos.id
                 JOIN usuarios ON devengos.usuarioID = usuarios.id
