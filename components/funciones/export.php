@@ -136,7 +136,7 @@ $writer = PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx')
 
 // Enviar las cabeceras al navegador
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment; filename="productos.xlsx"');
+header('Content-Disposition: attachment; filename="Devengos.xlsx"');
 
 // Guardar el archivo en el flujo de salida
 $writer->save('php://output');
