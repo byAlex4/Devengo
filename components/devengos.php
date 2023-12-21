@@ -4,6 +4,7 @@ ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 ?>
 <script>document.title = "Devengos | Devengo";</script>
+
 <main class="bodymain">
     <div class="mt-3">
         <h1>Página de devengos</h1>
@@ -51,10 +52,16 @@ error_reporting(E_ALL);
                 </tbody>
             </table>
         </div>
-        <form action="funciones/export.php">
-            <button type='submit' class="btn btn-primary m-3"
+        <form action="funciones/export.php" method="post" id="formExportar">
+            <input type="hidden" id="expCuenta" name="expCuenta">
+            <input type="hidden" id="expMonto" name="expMonto">
+            <input type="hidden" id="expContrato" name="expContrato">
+            <input type="hidden" id="expUnidad" name="expUnidad">
+            <input type="hidden" id="expFecha" name="expFecha">
+            <button type='button' class="btn btn-primary m-3" id="btnExportar"
                 style="background-color: #2a8f60; border-color:#8bc6a8;">Exportar</button>
         </form>
+
         <!--<button id="btnExportar" class="btn btn-primary m-3" type="button"
             style="background-color: #2a8f60; border-color:#8bc6a8;">Exportar</button>-->
     </div>
@@ -79,7 +86,6 @@ error_reporting(E_ALL);
     </div>
 </main>
 
-
 <!-- Script para manejar el evento de clic del botón -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -88,64 +94,33 @@ error_reporting(E_ALL);
 <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
 
 <script>
-    /*document.querySelector("#btnExportar").addEventListener("click", function () {
-        let tableExport = new TableExport(document.querySelector("#DatosDevengo"), {
-            exportButtons: false, // No queremos botones.
-            filename: "Devengo-devengo", // Nombre del archivo de Excel
-            sheetname: "Devengo", // Título de la hoja
-            onCellData: function (cell, row, col, data) {
-                // Ignora las columnas 9 y 10
-                if (col === 9 || col === 10) {
-                    return '';
-                }
+    // Obtener los elementos del DOM
+    var btnExportar = document.getElementById("btnExportar");
+    var bscCuenta = document.getElementById("bscCuenta");
+    var bscMonto = document.getElementById("bscMonto");
+    var bscContrato = document.getElementById("bscContrato");
+    var bscUnidad = document.getElementById("bscUnidad");
+    var bscFecha = document.getElementById("bscFecha");
+    var expCuenta = document.getElementById("expCuenta");
+    var expMonto = document.getElementById("expMonto");
+    var expContrato = document.getElementById("expContrato");
+    var expUnidad = document.getElementById("expUnidad");
+    var expFecha = document.getElementById("expFecha");
+    var formExportar = document.getElementById("formExportar");
 
-                // Manipula los datos de la columna 5
-                if (col === 5) {
-                    var value = data ? data.replace(/[$,]/g, '') : '';
-                    return parseFloat(value);
-                }
-
-                return data;
-            }
-        });
-
-        let datos = tableExport.getExportData();
-        let preferenciasDocumento = datos.DatosDevengo.xlsx;
-        console.log(datos);
-        tableExport.export2file(
-            preferenciasDocumento.data,
-            preferenciasDocumento.mimeType,
-            preferenciasDocumento.filename,
-            preferenciasDocumento.fileExtension,
-            preferenciasDocumento.merges,
-            preferenciasDocumento.RTL,
-            preferenciasDocumento.sheetname
-        );
+    // Agregar un evento al botón Exportar
+    document.querySelector("#btnExportar").addEventListener("click", function () {
+        // Asignar los valores de los inputs a los campos ocultos
+        expCuenta.value = bscCuenta.value;
+        expMonto.value = bscMonto.value;
+        expContrato.value = bscContrato.value;
+        expUnidad.value = bscUnidad.value;
+        expFecha.value = bscFecha.value;
+        // Enviar el segundo formulario
+        formExportar.submit();
     });
-    */
-
-    document.querySelector("#btnExportar2").addEventListener("click", function () {
-        let tableExport = new TableExport(document.querySelector("#tablaReporte"), {
-            exportButtons: false, // No queremos botones
-            filename: "Reporte-devengo", // Nombre del archivo de Excel
-            sheetname: "Reporte", // Título de la hoja
-        });
-
-        let datos = tableExport.getExportData();
-        let preferenciasDocumento = datos.tablaReporte.xlsx;
-
-        tableExport.export2file(
-            preferenciasDocumento.data,
-            preferenciasDocumento.mimeType,
-            preferenciasDocumento.filename,
-            preferenciasDocumento.fileExtension,
-            preferenciasDocumento.merges,
-            preferenciasDocumento.RTL,
-            preferenciasDocumento.sheetname
-        );
-    });
-
-
+</script>
+<script>
     // Función para cargar los datos
     function cargarDatos() {
         // Vaciamos el cuerpo de la tabla

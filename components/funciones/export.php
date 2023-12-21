@@ -9,50 +9,75 @@ session_start();
 if ($_SESSION['rol'] == "Administrador") {
     $sql = "SELECT devengos.id,
             cuentas.cuenta as cuenta,
+            contratos.clave AS contrato,
              contratos.proveedor AS proveedor,
-            DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
+             CONCAT(DAY(devengos.fecha), '-', ELT(MONTH(devengos.fecha), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.fecha)) AS encargo,
             devengos.descripcion,
             devengos.monto,
-            contratos.clave AS contrato,
-            contratos.mont_max, 
-            (contratos.mont_max - (SELECT SUM(monto)FROM devengos
-            WHERE contratoID = contratos.id)) AS saldoDis,
             unidades.nombre AS unidad,
             usuarios.nombre AS usuario,
-            DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
-            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at
+            CONCAT(DAY(devengos.created_at), '-', ELT(MONTH(devengos.created_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.created_at)) AS created_at,
+            CONCAT(DAY(devengos.updated_at), '-', ELT(MONTH(devengos.updated_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.updated_at)) AS updated_at
             FROM devengos
                 JOIN contratos ON devengos.contratoID = contratos.id
                 JOIN usuarios ON devengos.usuarioID = usuarios.id
                 JOIN unidades ON usuarios.unidadID = unidades.id
-                JOIN cuentas ON contratos.cuentaID = cuentas.id";
+                JOIN cuentas ON contratos.cuentaID = cuentas.id ";
+
+    if (!empty($_POST['expCuenta'])) {
+        $sql .= "AND cuentas.cuenta LIKE '" . $_POST['expCuenta'] . "%'";
+    }
+    if (!empty($_POST['expMonto'])) {
+        $sql .= "AND devengos.monto >=" . $_POST['expMonto'];
+    }
+    if (!empty($_POST['expContrato'])) {
+        $sql .= "AND contratos.clave LIKE '%" . $_POST['expContrato'] . "%'";
+    }
+    if (!empty($_POST['expUnidad'])) {
+        $sql .= "AND unidades.nombre LIKE '%" . $_POST['expUnidad'] . "%'";
+    }
+    if (!empty($_POST['expFecha'])) {
+        $sql .= "AND DATE_FORMAT(devengos.fecha, '%Y-%m') = '" . $_POST['expFecha'] . "'";
+    }
 } else {
     $sql = "SELECT devengos.id,
             cuentas.cuenta as cuenta,
+            contratos.clave AS contrato,
              contratos.proveedor AS proveedor,
-            DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
+             CONCAT(DAY(devengos.fecha), '-', ELT(MONTH(devengos.fecha), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.fecha)) AS encargo,
             devengos.descripcion,
             devengos.monto,
-            contratos.clave AS contrato,
-            contratos.mont_max, 
-            (contratos.mont_max - (SELECT SUM(monto)FROM devengos
-            WHERE contratoID = contratos.id)) AS saldoDis,
             unidades.nombre AS unidad,
             usuarios.nombre AS usuario,
-            DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
-            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at
+            CONCAT(DAY(devengos.created_at), '-', ELT(MONTH(devengos.created_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.created_at)) AS created_at,
+            CONCAT(DAY(devengos.updated_at), '-', ELT(MONTH(devengos.updated_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.updated_at)) AS updated_at
             FROM devengos
                 JOIN contratos ON devengos.contratoID = contratos.id
                 JOIN usuarios ON devengos.usuarioID = usuarios.id
                 JOIN unidades ON usuarios.unidadID = unidades.id
                 JOIN cuentas ON contratos.cuentaID = cuentas.id
             WHERE unidades.nombre = '" . $_SESSION['unidad'] . "';";
+    if (isset($_POST['bscCuenta'])) {
+        $sql .= "AND cuentas.cuenta LIKE '" . $_POST['bscCuenta'] . "%'";
+    }
+    if (isset($_POST['bscMonto'])) {
+        $sql .= "AND devengos.monto >=" . $_POST['bscMonto'];
+    }
+    if (isset($_POST['bscContrato'])) {
+        $sql .= "AND contratos.clave LIKE'%" . $_POST['bscContrato'] . "%'";
+    }
+    if (isset($_POST['bscUnidad'])) {
+        $sql .= "AND unidades.nombre LIKE'%" . $_POST['bscUnidad'] . "%'";
+    }
+    if (isset($_POST['bscFecha'])) {
+        $sql .= "AND DATE_FORMAT(devengos.fecha, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
+    }
 }
+
 
 $stmt = $conexion->prepare($sql);
 $stmt->execute();
 $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 // Crear el objeto Spreadsheet
 $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
@@ -60,27 +85,24 @@ $sheet = $spreadsheet->getActiveSheet();
 // Escribir el encabezado de la tabla
 $sheet->setCellValue('A1', 'ID');
 $sheet->setCellValue('B1', 'Cuenta');
-$sheet->setCellValue('C1', 'Proveedor');
-$sheet->setCellValue('D1', 'Fecha de cargo');
-$sheet->setCellValue('E1', 'Descripcion');
-$sheet->setCellValue('F1', 'Monto');
-$sheet->setCellValue('G1', 'Contrato');
-$sheet->setCellValue('H1', 'Saldo de contrato');
-$sheet->setCellValue('I1', 'Saldo disponible');
-$sheet->setCellValue('J1', 'Unidad');
-$sheet->setCellValue('K1', 'Usuario');
-$sheet->setCellValue('L1', 'Created at');
-$sheet->setCellValue('M1', 'Updated at');
+$sheet->setCellValue('C1', 'Contrato');
+$sheet->setCellValue('D1', 'Proveedor');
+$sheet->setCellValue('E1', 'Fecha de cargo');
+$sheet->setCellValue('F1', 'Descripcion');
+$sheet->setCellValue('G1', 'Monto');
+$sheet->setCellValue('H1', 'Unidad');
+$sheet->setCellValue('I1', 'Usuario');
+$sheet->setCellValue('J1', 'Creado en');
+$sheet->setCellValue('K1', 'Actualizado en');
+$sheet->setCellValue('L1', $sql);
 
-$sheet->getColumnDimension('C')->setWidth(30);
-$sheet->getColumnDimension('D')->setWidth(20);
-$sheet->getColumnDimension('E')->setWidth(25);
-$sheet->getColumnDimension('F')->setWidth(15);
-$sheet->getColumnDimension('H')->setWidth(15);
-$sheet->getColumnDimension('I')->setWidth(15);
-$sheet->getColumnDimension('K')->setWidth(30);
-$sheet->getColumnDimension('L')->setWidth(20);
-$sheet->getColumnDimension('M')->setWidth(20);
+$sheet->getColumnDimension('D')->setWidth(30);
+$sheet->getColumnDimension('E')->setWidth(20);
+$sheet->getColumnDimension('F')->setWidth(25);
+$sheet->getColumnDimension('G')->setWidth(15);
+$sheet->getColumnDimension('I')->setWidth(30);
+$sheet->getColumnDimension('J')->setWidth(20);
+$sheet->getColumnDimension('K')->setWidth(20);
 
 
 $styleArray = [
@@ -103,7 +125,7 @@ $styleArray = [
         ],
     ],
 ];
-$sheet->getStyle('A1:M1')->applyFromArray($styleArray);
+$sheet->getStyle('A1:K1')->applyFromArray($styleArray);
 $styleArray1 = [
     'font' => [
         'bold' => true,
@@ -124,9 +146,7 @@ $styleArray1 = [
         ],
     ],
 ];
-$sheet->getStyle('A2:M60')->applyFromArray($styleArray1);
-
-
+$sheet->getStyle('A2:K60')->applyFromArray($styleArray1);
 
 // Escribir los datos de la tabla
 $sheet->fromArray($datos, null, 'A2');
@@ -136,7 +156,13 @@ $writer = PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx')
 
 // Enviar las cabeceras al navegador
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment; filename="Devengos.xlsx"');
+// Obtener la fecha actual en el formato día-mes-año
+$fecha = date("d-m-Y-H-i-s");
+// Asignar el nombre del archivo con la fecha
+$nombre = "reporte devengo $fecha.xlsx";
+// Enviar la cabecera para descargar el archivo
+header("Content-Disposition: attachment; filename=\"$nombre\"");
+
 
 // Guardar el archivo en el flujo de salida
 $writer->save('php://output');
