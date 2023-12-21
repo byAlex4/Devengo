@@ -56,21 +56,22 @@ if ($_SESSION['rol'] == "Administrador") {
                 JOIN usuarios ON devengos.usuarioID = usuarios.id
                 JOIN unidades ON usuarios.unidadID = unidades.id
                 JOIN cuentas ON contratos.cuentaID = cuentas.id
-            WHERE unidades.nombre = '" . $_SESSION['unidad'] . "';";
-    if (isset($_POST['bscCuenta'])) {
-        $sql .= "AND cuentas.cuenta LIKE '" . $_POST['bscCuenta'] . "%'";
+            WHERE unidades.nombre = '" . $_SESSION['unidad'] . "' ";
+
+    if (!empty($_POST['expCuenta'])) {
+        $sql .= "AND cuentas.cuenta LIKE '" . $_POST['expCuenta'] . "%'";
     }
-    if (isset($_POST['bscMonto'])) {
-        $sql .= "AND devengos.monto >=" . $_POST['bscMonto'];
+    if (!empty($_POST['expMonto'])) {
+        $sql .= "AND devengos.monto >=" . $_POST['expMonto'];
     }
-    if (isset($_POST['bscContrato'])) {
-        $sql .= "AND contratos.clave LIKE'%" . $_POST['bscContrato'] . "%'";
+    if (!empty($_POST['expContrato'])) {
+        $sql .= "AND contratos.clave LIKE '%" . $_POST['expContrato'] . "%'";
     }
-    if (isset($_POST['bscUnidad'])) {
-        $sql .= "AND unidades.nombre LIKE'%" . $_POST['bscUnidad'] . "%'";
+    if (!empty($_POST['expUnidad'])) {
+        $sql .= "AND unidades.nombre LIKE '%" . $_POST['expUnidad'] . "%'";
     }
-    if (isset($_POST['bscFecha'])) {
-        $sql .= "AND DATE_FORMAT(devengos.fecha, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
+    if (!empty($_POST['expFecha'])) {
+        $sql .= "AND DATE_FORMAT(devengos.fecha, '%Y-%m') = '" . $_POST['expFecha'] . "'";
     }
 }
 
