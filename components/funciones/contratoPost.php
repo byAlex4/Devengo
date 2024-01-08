@@ -22,21 +22,26 @@ if (
     DATE_FORMAT( contratos.fecha_fin, '%d-%M-%Y') AS fecha_fin
     FROM contratos
     JOIN cuentas ON contratos.cuentaID = cuentas.id ";
+    $conditions = [];
     if (!empty($_POST['bscClave'])) {
-        $consultaSQL .= "WHERE clave LIKE '%" . $_POST['bscClave'] . "%'";
+        $conditions[] = "clave LIKE '%" . $_POST['bscClave'] . "%'";
     }
     if (!empty($_POST['bscCuenta'])) {
-        $consultaSQL .= "WHERE cuentas.cuenta LIKE '" . $_POST['bscCuenta'] . "%'";
+        $conditions[] = "cuentas.cuenta LIKE '" . $_POST['bscCuenta'] . "%'";
     }
     if (!empty($_POST['bscMonto'])) {
-        $consultaSQL .= "WHERE mont_max >=" . $_POST['bscMonto'];
+        $conditions[] = "contratos.mont_max >=" . $_POST['bscMonto'];
     }
     if (!empty($_POST['bscFecha'])) {
-        $consultaSQL .= "WHERE DATE_FORMAT(fecha_in, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
+        $conditions[] = "DATE_FORMAT(contratos.fecha_in, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
     }
     if (!empty($_POST['bscProveedor'])) {
-        $consultaSQL .= "WHERE proveedor LIKE '%" . $_POST['bscProveedor'] . "%'";
+        $conditions[] = "contratos.proveedor LIKE '%" . $_POST['bscProveedor'] . "%'";
     }
+    if (!empty($conditions)) {
+        $consultaSQL .= " WHERE " . implode(' AND ', $conditions);
+    }
+
     $sentecia = $conexion->prepare($consultaSQL);
     $sentecia->execute();
 

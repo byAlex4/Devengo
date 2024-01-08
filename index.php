@@ -23,22 +23,22 @@ if ($error) {
     <?php
 } else
     echo ("todo correcto");
-    header("Location: components/main.php");
-    echo ("creando perfil...");
-    $matricula = "SS0123";
-    $contraseña = "12345";
-    $nombre = "Alejandro Bocanegra Medina";
-    $unidad = "1";
-    $rol = "1";
+header("Location: components/index.php");
+echo ("creando perfil...");
+$matricula = "SS0123";
+$contraseña = "12345";
+$nombre = "Alejandro Bocanegra Medina";
+$unidad = "1";
+$rol = "1";
 
-    $contraseña_encriptada = password_hash($contraseña, PASSWORD_BCRYPT);
-    echo($contraseña_encriptada);
+$contraseña_encriptada = password_hash($contraseña, PASSWORD_BCRYPT);
+echo ($contraseña_encriptada);
 
-    $sql = "INSERT INTO usuarios (matricula, nombre, unidadID, rolID, contra) VALUES ('$matricula', '$nombre', '$unidad', '$rol', '$contraseña_encriptada')";
-    // Ejecutar la consulta SQL
-    $conexion->exec($sql);
-    echo "Perfil creado correctamente.";
-    ?>
+$sql = "INSERT INTO usuarios (matricula, nombre, unidadID, rolID, contra) VALUES ('$matricula', '$nombre', '$unidad', '$rol', '$contraseña_encriptada')";
+// Ejecutar la consulta SQL
+$conexion->exec($sql);
+echo "Perfil creado correctamente.";
+?>
 
 <form action="components/login.php" method="get">
     <button type="submit">Ir al login</button>

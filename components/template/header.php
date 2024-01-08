@@ -76,7 +76,7 @@
   <header style="position: initial">
     <nav class="navbar navbar-expand-lg navbar-dark bg-success bg-gradient" style="padding: 5px;">
       <div class="container-fluid">
-        <a class="navbar-brand " href="./main.php" aria-label="Bootstrap">
+        <a class="navbar-brand " href="./index.php" aria-label="Bootstrap">
           <img src="img/imsslogo.png" width="40" height="45" alt="logoNav" class="d-block my-1" fill="currentColor" />
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
@@ -87,14 +87,14 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="width: 50%;">
           <div class="navbar-nav">
             <?php if ($_SESSION['rol'] == "Administrador") { ?>
-              <a class="nav-link" href="./main.php" style="color: #ffffff; !important">Inicio</a>
+              <a class="nav-link" href="./index.php" style="color: #ffffff; !important">Inicio</a>
               <a class="nav-link" href="./cuentas.php" style="color: #ffffff; !important">Cuentas</a>
               <a class="nav-link" href="./contratos.php" style="color: #ffffff; !important">Contratos</a>
               <a class="nav-link" href="./devengos.php" style="color: #ffffff; !important">Devengos</a>
               <a class="nav-link" href="./usuarios.php" style="color: #ffffff; !important">Usuarios</a>
               <a class="nav-link" href="./unidades.php" style="color: #ffffff; !important">Unidades</a>
             <?php } else { ?>
-              <a class="nav-link" href="./main.php" style="color: #ffffff; !important">Inicio</a>
+              <a class="nav-link" href="./index.php" style="color: #ffffff; !important">Inicio</a>
               <a class="nav-link" href="./devengos.php" style="color: #ffffff; !important">Devengo</a>
             <?php } ?>
           </div>

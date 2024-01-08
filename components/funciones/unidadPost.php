@@ -6,15 +6,19 @@ if (
     isset($_POST['bscNombre'])
     || isset($_POST['bscClave'])
 ) {
-    $consultaSQL = "SELECT id, nombre, descripcion, 
-    DATE_FORMAT( created_at, '%d-%M-%Y') AS created_at,
-    DATE_FORMAT( updated_at, '%d-%M-%Y') AS updated_at 
+    $consultaSQL = "SELECT unidades.id, unidades.nombre, unidades.descripcion, 
+    DATE_FORMAT( unidades.created_at, '%d-%M-%Y') AS created_at,
+    DATE_FORMAT( unidades.updated_at, '%d-%M-%Y') AS updated_at 
     FROM unidades ";
+    $conditions = [];
     if (!empty($_POST['bscClave'])) {
-        $consultaSQL .= "WHERE nombre LIKE '%" . $_POST['bscClave'] . "%'";
+        $conditions[] = "unidades.nombre LIKE '%" . $_POST['bscClave'] . "%'";
     }
     if (!empty($_POST['bscNombre'])) {
-        $consultaSQL .= "WHERE descripcion LIKE '%" . $_POST['bscNombre'] . "%'";
+        $conditions[] = "unidades.descripcion LIKE '%" . $_POST['bscNombre'] . "%'";
+    }
+    if (!empty($conditions)) {
+        $consultaSQL .= " WHERE " . implode(' AND ', $conditions);
     }
 
     $sentecia = $conexion->prepare($consultaSQL);

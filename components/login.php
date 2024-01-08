@@ -97,7 +97,7 @@
                           echo "Usted es admin!";
                           header("Location: ./usuarios.php");
                         } else
-                          header("Location: ./main.php");
+                          header("Location: ./index.php");
                       } else
                         echo ("La contraseña es incorrecta.");
                     } else

@@ -10,12 +10,17 @@ if (
     DATE_FORMAT( created_at, '%d-%M-%Y') AS created_at, 
     DATE_FORMAT( updated_at, '%d-%M-%Y') AS updated_at
     FROM cuentas ";
+    $conditions = [];
     if (!empty($_POST['bscNumero'])) {
-        $consultaSQL .= "WHERE cuenta LIKE '" . $_POST['bscNumero'] . "%'";
+        $conditions[] = "cuenta LIKE '" . $_POST['bscNumero'] . "%'";
     }
     if (!empty($_POST['bscDesc'])) {
-        $consultaSQL .= "WHERE descripcion LIKE '%" . $_POST['bscDesc'] . "%'";
+        $conditions[] = "descripcion LIKE '%" . $_POST['bscDesc'] . "%'";
     }
+    if (!empty($conditions)) {
+        $consultaSQL .= " WHERE " . implode(' AND ', $conditions);
+    }
+
     $sentecia = $conexion->prepare($consultaSQL);
     $sentecia->execute();
 

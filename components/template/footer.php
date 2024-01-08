@@ -5,7 +5,7 @@
         <div class='row m-3' style='width: 100%;'>
                 <p class="col-md-5 text-body-secondary" style="max-height: 30px;">© 2023 Intituto Mexicano de Seguro
                         Social</p>
-                <a href="./main.php"
+                <a href="./index.php"
                         class="col-md-2 d-flex justify-content-center link-body-emphasis text-decoration-none">
                         <img src="img/imsslogo-recort.png" width="75px" height="25px" alt="logoNav" class="d-block my-1"
                                 fill="currentColor" />

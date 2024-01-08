@@ -17,65 +17,67 @@ if (
     if ($_SESSION['rol'] == "Administrador") {
         $consultaSQL =
             "SELECT
-            devengos.id,
-            DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
-            devengos.descripcion,
-            FORMAT(devengos.monto, 3, 'es-MX') AS monto_formato,
-            DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
-            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
-            cuentas.cuenta as cuenta,
-            devengos.contratoID AS contratoID,
-            contratos.clave AS contrato,
-            FORMAT(contratos.mont_max, 3, 'es-MX') AS saldo, 
-            FORMAT((contratos.mont_max - (SELECT SUM(monto)FROM devengos
-            WHERE contratoID = contratos.id)),3, 'es-MX') AS saldoDis,
-                usuarios.nombre AS usuario,
-                unidades.nombre AS unidad,
-                contratos.proveedor AS proveedor
-            FROM devengos
-                JOIN contratos ON devengos.contratoID = contratos.id
-                JOIN usuarios ON devengos.usuarioID = usuarios.id
-                JOIN unidades ON usuarios.unidadID = unidades.id
-                JOIN cuentas ON contratos.cuentaID = cuentas.id ";
+        devengos.id,
+        DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
+        devengos.descripcion,
+        FORMAT(devengos.monto, 3, 'es-MX') AS monto_formato,
+        DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
+        DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
+        cuentas.cuenta as cuenta,
+        devengos.contratoID AS contratoID,
+        contratos.clave AS contrato,
+        FORMAT(contratos.mont_max, 3, 'es-MX') AS saldo, 
+        FORMAT((contratos.mont_max - (SELECT SUM(monto)FROM devengos
+        WHERE contratoID = contratos.id)),3, 'es-MX') AS saldoDis,
+            usuarios.nombre AS usuario,
+            unidades.nombre AS unidad,
+            contratos.proveedor AS proveedor
+        FROM devengos
+            JOIN contratos ON devengos.contratoID = contratos.id
+            JOIN usuarios ON devengos.usuarioID = usuarios.id
+            JOIN unidades ON usuarios.unidadID = unidades.id
+            JOIN cuentas ON contratos.cuentaID = cuentas.id ";
     } else {
-        $consultaSQL =
-            "SELECT
-            devengos.id,
-            DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
-            devengos.descripcion,
-            FORMAT(devengos.monto, 3, 'es-MX') AS monto_formato,
-            DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
-            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
-            cuentas.cuenta as cuenta,
-            devengos.contratoID AS contratoID,
-            contratos.clave AS contrato,
-            FORMAT(contratos.mont_max, 3, 'es-MX') AS saldo, 
-            FORMAT((contratos.mont_max - (SELECT SUM(monto)FROM devengos
-            WHERE contratoID = contratos.id)),3, 'es-MX') AS saldoDis,
-                usuarios.nombre AS usuario,
-                unidades.nombre AS unidad,
-                contratos.proveedor AS proveedor
-            FROM devengos
-                JOIN contratos ON devengos.contratoID = contratos.id
-                JOIN usuarios ON devengos.usuarioID = usuarios.id
-                JOIN unidades ON usuarios.unidadID = unidades.id
-                JOIN cuentas ON contratos.cuentaID = cuentas.id 
-            WHERE unidades.nombre = '" . $_SESSION['unidad'] . "' ";
+        $consultaSQL = "SELECT devengos.id,
+        DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
+        devengos.descripcion,
+        FORMAT(devengos.monto, 3, 'es-MX') AS monto_formato,
+        DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
+        DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
+        cuentas.cuenta as cuenta,
+        devengos.contratoID AS contratoID,
+        contratos.clave AS contrato,
+        FORMAT(contratos.mont_max, 3, 'es-MX') AS saldo, 
+        FORMAT((contratos.mont_max - (SELECT SUM(monto)FROM devengos
+        WHERE contratoID = contratos.id)),3, 'es-MX') AS saldoDis,
+            usuarios.nombre AS usuario,
+            unidades.nombre AS unidad,
+            contratos.proveedor AS proveedor
+        FROM devengos
+            JOIN contratos ON devengos.contratoID = contratos.id
+            JOIN usuarios ON devengos.usuarioID = usuarios.id
+            JOIN unidades ON usuarios.unidadID = unidades.id
+            JOIN cuentas ON contratos.cuentaID = cuentas.id 
+        WHERE unidades.nombre = '" . $_SESSION['unidad'] . "' ";
     }
+    $conditions = [];
     if (!empty($_POST['bscCuenta'])) {
-        $consultaSQL .= "AND cuentas.cuenta LIKE '" . $_POST['bscCuenta'] . "%'";
+        $conditions[] = "cuentas.cuenta LIKE '" . $_POST['bscCuenta'] . "%'";
     }
     if (!empty($_POST['bscMonto'])) {
-        $consultaSQL .= "AND devengos.monto >=" . $_POST['bscMonto'];
+        $conditions[] = "devengos.monto >=" . $_POST['bscMonto'];
     }
     if (!empty($_POST['bscContrato'])) {
-        $consultaSQL .= "AND contratos.clave LIKE'%" . $_POST['bscContrato'] . "%'";
+        $conditions[] = "contratos.clave LIKE'%" . $_POST['bscContrato'] . "%'";
     }
     if (!empty($_POST['bscUnidad'])) {
-        $consultaSQL .= "AND unidades.nombre LIKE'%" . $_POST['bscUnidad'] . "%'";
+        $conditions[] = "unidades.nombre LIKE'%" . $_POST['bscUnidad'] . "%'";
     }
     if (!empty($_POST['bscFecha'])) {
-        $consultaSQL .= "AND DATE_FORMAT(devengos.fecha, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
+        $conditions[] = "DATE_FORMAT(devengos.fecha, '%Y-%m') = '" . $_POST['bscFecha'] . "'";
+    }
+    if (!empty($conditions)) {
+        $consultaSQL .= " AND " . implode(' AND ', $conditions);
     }
 
     $sentecia = $conexion->prepare($consultaSQL);

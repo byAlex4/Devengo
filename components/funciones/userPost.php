@@ -9,24 +9,27 @@ if (
     || isset($_POST['bscRol'])
 ) {
     $consultaSQL = "SELECT usuarios.id, usuarios.matricula, usuarios.nombre, 
-        DATE_FORMAT( usuarios.created_at, '%d-%M-%Y') AS created_at, 
-        DATE_FORMAT( usuarios.updated_at, '%d-%M-%Y') AS updated_at, 
-        unidades.nombre AS unidad, 
-        roles.nombre AS rol, usuarios.contra FROM usuarios 
-        JOIN unidades ON usuarios.unidadID = unidades.id 
-        JOIN roles ON usuarios.rolID = roles.id ";
-
+    DATE_FORMAT( usuarios.created_at, '%d-%M-%Y') AS created_at, 
+    DATE_FORMAT( usuarios.updated_at, '%d-%M-%Y') AS updated_at, 
+    unidades.nombre AS unidad, 
+    roles.nombre AS rol, usuarios.contra FROM usuarios 
+    JOIN unidades ON usuarios.unidadID = unidades.id 
+    JOIN roles ON usuarios.rolID = roles.id ";
+    $conditions = [];
     if (!empty($_POST['bscMatricula'])) {
-        $consultaSQL .= "WHERE matricula LIKE '%" . $_POST['bscMatricula'] . "%'";
+        $conditions[] = "matricula LIKE '%" . $_POST['bscMatricula'] . "%'";
     }
     if (!empty($_POST['bscNombre'])) {
-        $consultaSQL .= "WHERE usuarios.nombre LIKE '%" . $_POST['bscNombre'] . "%'";
+        $conditions[] = "usuarios.nombre LIKE '%" . $_POST['bscNombre'] . "%'";
     }
     if (!empty($_POST['bscRol'])) {
-        $consultaSQL .= "WHERE roles.nombre LIKE '%" . $_POST['bscRol'] . "%'";
+        $conditions[] = "roles.nombre LIKE '%" . $_POST['bscRol'] . "%'";
     }
     if (!empty($_POST['bscUnidad'])) {
-        $consultaSQL .= "WHERE unidades.nombre LIKE '%" . $_POST['bscUnidad'] . "%'";
+        $conditions[] = "unidades.nombre LIKE '%" . $_POST['bscUnidad'] . "%'";
+    }
+    if (!empty($conditions)) {
+        $consultaSQL .= " WHERE " . implode(' AND ', $conditions);
     }
 
     $sentecia = $conexion->prepare($consultaSQL);
