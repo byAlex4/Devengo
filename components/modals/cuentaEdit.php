@@ -1,9 +1,9 @@
 <div class="modal-header">
-    <h2 class="modal-title" id="editarModalLabel">Editar usuario</h2>
+    <h2 class="modal-title" id="editarModalLabel">Editar cuenta</h2>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
-    <h4 class="h1 txtEdit">Modificar los datos del usuario:
+    <h4 class="h1 txtEdit">Modificar los datos de la cuenta:
     </h4>
     <div class="container">
         <div class="col">

@@ -10,14 +10,14 @@ if ($_SESSION['rol'] == "Administrador") {
     $sql = "SELECT devengos.id,
             cuentas.cuenta as cuenta,
             contratos.clave AS contrato,
-             contratos.proveedor AS proveedor,
-             CONCAT(DAY(devengos.fecha), '-', ELT(MONTH(devengos.fecha), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.fecha)) AS encargo,
+            contratos.proveedor AS proveedor,
+            DATE_FORMAT(devengos.fecha, '%d-%m-%Y'),
             devengos.descripcion,
             devengos.monto,
             unidades.nombre AS unidad,
             usuarios.nombre AS usuario,
-            CONCAT(DAY(devengos.created_at), '-', ELT(MONTH(devengos.created_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.created_at)) AS created_at,
-            CONCAT(DAY(devengos.updated_at), '-', ELT(MONTH(devengos.updated_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.updated_at)) AS updated_at
+            DATE_FORMAT(devengos.created_at, '%d-%m-%Y'),
+            DATE_FORMAT(devengos.updated_at, '%d-%m-%Y') 
             FROM devengos
                 JOIN contratos ON devengos.contratoID = contratos.id
                 JOIN usuarios ON devengos.usuarioID = usuarios.id
@@ -43,19 +43,19 @@ if ($_SESSION['rol'] == "Administrador") {
     $sql = "SELECT devengos.id,
             cuentas.cuenta as cuenta,
             contratos.clave AS contrato,
-             contratos.proveedor AS proveedor,
-             CONCAT(DAY(devengos.fecha), '-', ELT(MONTH(devengos.fecha), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.fecha)) AS encargo,
+            contratos.proveedor AS proveedor,
+            DATE_FORMAT(devengos.fecha, '%d-%m-%Y'),
             devengos.descripcion,
             devengos.monto,
             unidades.nombre AS unidad,
             usuarios.nombre AS usuario,
-            CONCAT(DAY(devengos.created_at), '-', ELT(MONTH(devengos.created_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.created_at)) AS created_at,
-            CONCAT(DAY(devengos.updated_at), '-', ELT(MONTH(devengos.updated_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.updated_at)) AS updated_at
+            DATE_FORMAT(devengos.created_at, '%d-%m-%Y'),
+            DATE_FORMAT(devengos.updated_at, '%d-%m-%Y') 
             FROM devengos
                 JOIN contratos ON devengos.contratoID = contratos.id
                 JOIN usuarios ON devengos.usuarioID = usuarios.id
                 JOIN unidades ON usuarios.unidadID = unidades.id
-                JOIN cuentas ON contratos.cuentaID = cuentas.id
+                JOIN cuentas ON contratos.cuentaID = cuentas.id 
             WHERE unidades.nombre = '" . $_SESSION['unidad'] . "' ";
 
     if (!empty($_POST['expCuenta'])) {
@@ -95,7 +95,6 @@ $sheet->setCellValue('H1', 'Unidad');
 $sheet->setCellValue('I1', 'Usuario');
 $sheet->setCellValue('J1', 'Creado en');
 $sheet->setCellValue('K1', 'Actualizado en');
-$sheet->setCellValue('L1', $sql);
 
 $sheet->getColumnDimension('D')->setWidth(30);
 $sheet->getColumnDimension('E')->setWidth(20);
