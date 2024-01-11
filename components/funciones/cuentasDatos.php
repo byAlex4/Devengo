@@ -5,7 +5,10 @@ try {
     include '../../config.php';
 
     // Preparamos la consulta SQL para obtener los datos de los usuarios, sus unidades y sus roles
-    $stmt = $conexion->prepare("SELECT * FROM cuentas");
+    $stmt = $conexion->prepare("SELECT id, cuenta, descripcion, 
+    CONCAT(DAY(created_at), '-', ELT(MONTH(created_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(created_at)) AS created_at, 
+    CONCAT(DAY(updated_at), '-', ELT(MONTH(updated_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(updated_at)) AS updated_at 
+    FROM cuentas");
 
     // Ejecutamos la consulta SQL sin parámetros
     $stmt->execute();

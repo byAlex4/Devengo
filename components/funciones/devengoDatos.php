@@ -10,13 +10,10 @@ try {
     // Preparamos la consulta SQL para obtener los datos de los usuarios, sus unidades y sus roles
     if ($_SESSION['rol'] == "Administrador") {
         $stmt = $conexion->prepare(
-            "SELECT
-            devengos.id,
-            DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
+            "SELECT devengos.id,
+            CONCAT(DAY(devengos.fecha), '-', ELT(MONTH(devengos.fecha), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.fecha)) AS fecha,
             devengos.descripcion,
             FORMAT(devengos.monto, 3, 'es-MX') AS monto_formato,
-            DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
-            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
             cuentas.cuenta as cuenta,
             devengos.contratoID AS contratoID,
             contratos.clave AS contrato,
@@ -30,16 +27,14 @@ try {
                 JOIN contratos ON devengos.contratoID = contratos.id
                 JOIN usuarios ON devengos.usuarioID = usuarios.id
                 JOIN unidades ON usuarios.unidadID = unidades.id
-                JOIN cuentas ON contratos.cuentaID = cuentas.id");
+                JOIN cuentas ON contratos.cuentaID = cuentas.id"
+        );
     } else {
         $stmt = $conexion->prepare(
-            "SELECT
-            devengos.id,
-            DATE_FORMAT(devengos.fecha, '%d-%M-%Y') AS fecha,
+            "SELECT devengos.id,
+            CONCAT(DAY(devengos.fecha), '-', ELT(MONTH(devengos.fecha), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(devengos.fecha)) AS fecha,
             devengos.descripcion,
             FORMAT(devengos.monto, 3, 'es-MX') AS monto_formato,
-            DATE_FORMAT(devengos.created_at, '%d-%M-%Y') AS created_at,
-            DATE_FORMAT(devengos.updated_at,'%d-%M-%Y') AS updated_at,
             cuentas.cuenta as cuenta,
             devengos.contratoID AS contratoID,
             contratos.clave AS contrato,

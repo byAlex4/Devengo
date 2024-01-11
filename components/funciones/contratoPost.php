@@ -18,8 +18,8 @@ if (
     contratos.descripcion, 
     FORMAT(contratos.mont_max, 3, 'es-MX') AS mont_max, 
     FORMAT(contratos.mont_min, 3, 'es-MX') AS mont_min, 
-    DATE_FORMAT( contratos.fecha_in, '%d-%M-%Y') AS fecha_in,
-    DATE_FORMAT( contratos.fecha_fin, '%d-%M-%Y') AS fecha_fin
+    CONCAT(DAY(contratos.fecha_in), '-', ELT(MONTH(contratos.fecha_in), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(contratos.fecha_in)) AS fecha_in,
+    CONCAT(DAY(contratos.fecha_fin), '-', ELT(MONTH(contratos.fecha_fin), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(contratos.fecha_fin)) AS fecha_fin
     FROM contratos
     JOIN cuentas ON contratos.cuentaID = cuentas.id ";
     $conditions = [];

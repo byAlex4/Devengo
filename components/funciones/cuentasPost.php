@@ -7,8 +7,8 @@ if (
     || isset($_POST['bscDesc'])
 ) {
     $consultaSQL = "SELECT id, cuenta, descripcion, 
-    DATE_FORMAT( created_at, '%d-%M-%Y') AS created_at, 
-    DATE_FORMAT( updated_at, '%d-%M-%Y') AS updated_at
+    CONCAT(DAY(created_at), '-', ELT(MONTH(created_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(created_at)) AS created_at, 
+    CONCAT(DAY(updated_at), '-', ELT(MONTH(updated_at), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'), '-', YEAR(updated_at)) AS updated_at 
     FROM cuentas ";
     $conditions = [];
     if (!empty($_POST['bscNumero'])) {
